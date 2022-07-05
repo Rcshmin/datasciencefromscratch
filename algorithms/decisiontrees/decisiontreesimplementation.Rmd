@@ -1,0 +1,44 @@
+---
+title: "Decision Trees"
+author: "Rcshmin"
+date: '2022-07-05'
+output:
+  rmdformats::downcute:
+    self_contained: yes
+    thumbnails: no
+    lightbox: yes
+    gallery: no
+    highlight: tango
+editor_options:
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(knitr)
+```
+
+## What are decision trees?
+
+**Decision trees are a non-parametric supervised learning method**. **<span style="color: red;">Supervised</span>** means that the input and output data is labelled. **<span style="color: blue;">Non-parametric</span>** means that no assumptions are made regarding the assumptions of the population. This definition is obviously not that useful, but with some further consideration we can make some sense of it. **<span style="color: green;">Analogous to a tree in real life</span>**, a decision tree is a **tree-like model of decisions**. In essence, we pass this model data on several input variables, and ask it to create a tree that **predicts** the **value** of the **target variable**. This is all probably best understood through an example, so let's take a look at one...
+
+### Example
+
+```{r echo = F, fig.cap = "Decision tree on kyphosis following spinal surgery" }
+
+
+include_graphics(c("https://upload.wikimedia.org/wikipedia/commons/2/25/Cart_tree_kyphosis.png"))
+```
+
+
+In the the above example we consider **whether or not a patient has spine curvature** (kyphosis) following surgery **given** their **age**, and what **<span style="color: purple;">number vertebra</span>** of the spine the surgery began from. So our input variables are the number of the vertebra the surgery began from (start), age and whether or not a patient had kyphosis. The target variable in this case is the presence of kyphosis. **<span style="color: blue;">Suppose we added a new patient</span>** to the scatterplot. How would we be able to determine **<span style="color: green;">whether this patient has kyphosis?</span>**. From looking at the scatterplot, it seems that surgeries that started below the 8.5th vertebra had a higher prevalence of kyphosis, so if our new patient met this criteria, he would more often than not have kyphosis.  
+
+
+
+```{r include = F, eval = F}
+**<span style="color: green;">whether this patient has kyphosis?</span>**
+```
+
+
+
+
