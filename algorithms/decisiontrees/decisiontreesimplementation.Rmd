@@ -14,8 +14,24 @@ editor_options:
 ---
 
 ```{r setup, include=FALSE}
+
 knitr::opts_chunk$set(echo = TRUE)
+
 library(knitr)
+library(readr)
+library(tidyverse)
+library(pilot)
+library(showtext)
+library(kableExtra)
+library(gridExtra)
+library(rpart)
+library(rpart.plot)
+
+#Global chunk datasets
+
+salmon_fish <- read.csv(url("https://raw.githubusercontent.com/ritvikmath/YouTubeVideoCode/main/fish.csv"))
+
+
 ```
 
 ## What are decision trees?
@@ -24,16 +40,64 @@ library(knitr)
 
 ### Example
 
-```{r echo = F, fig.cap = "Decision tree on kyphosis following spinal surgery" }
+In this example we consider how we can classify a fish as a salmon or tuna based off its length and weight. Looking at the below data set, it is easy to see some **patterns**, in how each type of fish is grouped based off its two **characteristics**. For instance, any fish with a length less than around 2.5 is a tuna. Continuing on, a fish with length greater than 2.5, and weight less than around 4 is a salmon. We could also say that a fish with length greater than 7.2 and weight greater than 4.1 is a tuna. You are probably getting the gist of it at this point...
 
+```{r, echo = F, out.width="100%", fig.align='center'}
 
-include_graphics(c("https://upload.wikimedia.org/wikipedia/commons/2/25/Cart_tree_kyphosis.png"))
+#Prepare fonts
+
+font_add_google("Montserrat", "montsr")
+showtext_auto()
+
+#Create scatter plot
+
+plot1 <- ggplot(data = salmon_fish, aes(x = length, y = weight, color = type)) +
+  geom_point() +
+  labs(title = "Classifying fish by weight and length", 
+       subtitle = "How can we partition this data into its classes?") +
+  theme_classic() +
+  theme(text=element_text(family="montsr"), 
+        plot.title = element_text(size=32),
+        plot.subtitle = element_text(size=22),
+        axis.title = element_text(size=22),
+        axis.text = element_text(size=16),
+        legend.text = element_text(size=16), 
+        legend.title = element_text(size=22)) +
+  scale_color_pilot()
+
+#Create gridarrange table
+
+salmon_fish1 <- salmon_fish %>% 
+  slice_head(n = 10)
+
+salmon_fish2 <- tableGrob(salmon_fish1, rows=NULL)
+
+grid.arrange(plot1, salmon_fish2, nrow=1, widths = c(2.75,1))
+
 ```
 
+If we take all of these splits, or otherwise **decisions** and **organised them**, it would look something like this
 
-In the the above example we consider **whether or not a patient has spine curvature** (kyphosis) following surgery **given** their **age**, and what **<span style="color: purple;">number vertebra</span>** of the spine the surgery began from. So our input variables are the number of the vertebra the surgery began from (start), age and whether or not a patient had kyphosis. The target variable in this case is the presence of kyphosis. **<span style="color: blue;">Suppose we added a new patient</span>** to the scatterplot. How would we be able to determine **<span style="color: green;">whether this patient has kyphosis?</span>**. From looking at the scatterplot, it seems that surgeries that started below the 8.5th vertebra had a higher prevalence of kyphosis, so if our new patient met this criteria, he would more often than not have kyphosis.  
+```{r echo = F, fig.align='center'}
+
+#Create decision tree on example data
+
+salmon_tree <- rpart(type ~ length + weight, data = salmon_fish)
+
+#Create decision tree visualization on example data
+
+prp(salmon_tree, fallen.leaves = FALSE, type=1, extra=1, varlen=0, faclen=0, yesno.yshift=-1, cex = 1.5)
+
+```
+
+And voila, we have our tree! So from referring to the diagram above, we can see that the decision tree has created splits across our input variables (weight and length) such that our scatterplot becomes partitioned into rectangular regions containing each type of the fish (the target variable). This is exactly what  
 
 
+```{r eval = F, include = F, fig.cap = "Decision tree on kyphosis following spinal surgery" }
+
+include_graphics(c("https://upload.wikimedia.org/wikipedia/commons/2/25/Cart_tree_kyphosis.png"))
+
+```
 
 ```{r include = F, eval = F}
 **<span style="color: green;">whether this patient has kyphosis?</span>**
