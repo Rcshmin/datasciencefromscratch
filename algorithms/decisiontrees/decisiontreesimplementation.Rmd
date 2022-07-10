@@ -8,7 +8,7 @@ output:
     thumbnails: no
     lightbox: yes
     gallery: no
-    highlight: tango
+    highlight: espresso
     toc_depth: 2
 editor_options:
   chunk_output_type: console
@@ -31,7 +31,6 @@ library(rpart.plot)
 #Global chunk datasets
 
 salmon_fish <- read.csv(url("https://raw.githubusercontent.com/ritvikmath/YouTubeVideoCode/main/fish.csv"))
-
 
 ```
 
@@ -93,22 +92,107 @@ prp(salmon_tree, fallen.leaves = FALSE, type=1, extra=1, varlen=0, faclen=0, yes
 
 And voila, we have our tree! From referring to the diagram above, we can see that the decision tree has created splits across our input variables (weight and length) such that our scatterplot becomes partitioned into rectangular regions containing each type of the fish (the target variable). This is exactly what the decision tree classifier does. Some of you may be asking why this is useful? Well suppose we have a noob fisherman in the Atlantic ocean (which only contains salmon and tuna for our purposes) who has just caught his first fish, but is unsure of what fish it is. Taking the decision tree just produced, this noob fisherman could then identify what fish he has caught. Well this is not exactly the most realistic scenario, but you get the idea hopefully. So now that we know what the algorithm does, lets take a look at some terms that are often thrown around when talking about decisions tree's.
 
-## Key Terminologies
+## Describing a tree
 
 It would good if we could have some terminology to describe the different parts of a tree...
 
 * **Root Node**: The input data set or population used to create the decision tree is the root node. It is always the top most node in a decision tree from which the data set it split into different subsets
 * **Decision node**: Sub-nodes that are split into further sub-nodes. The decision nodes, as the name suggests, are the nodes which split our data set into subsets. From our example before, the $\mbox{length} \geq 3$  or $\mbox{length }<7$ are two of the many decision nodes 
 * **Parent and child node**: A node which is divided sub-nodes is the parent node of the sub-nodes, whereas the sub-nodes are the children of the given parent node. The $\mbox{weight} < 6.8$ is the parent node of the terminal nodes below it. 
-* **Leaf/terminal node**: 
+* **Leaf/terminal node**: Nodes that do not get split any further
+* **Pure node**: A node at which points classified all belong to a single class. For our tree, all the terminal nodes are also pure nodes
+* **Branch/sub-tree**: A subsection of the entire tree is called branch or sub-tree
 
 
+## Measures of uncertainty
 
+We saw earlier that the purpose of a decision tree is to partition the data into regions of a certain class (or try its best to do so). There were many choices for the split among our two input variables, but one may naturally ask which of these splits are the best, and in which order should we carry them out, such that the resultant data is partitioned as good as possible. Now as it turns out, this question relates the notion of uncertainty. The best split will be the one that minimizes the uncertainty of the child nodes. More specifically, we seek to achieve the maximum level of homogeneity (sameness) in the target variable, such that the total uncertainty of the child nodes are less than the parent node. 
+
+### Entropy
+
+Entropy quantifies the amount of uncertainty involved in the outcome of a process. It has formula 
+\begin{align*}
+\mbox{Entropy} &= \sum_{c}{f_{c} \cdot I(c)}
+\end{align*}
+
+where $f_{c}$ is the fraction of a class in data set and $I(c)$ is the information content in the class. Also $c$ is the total number of classes. In the context of decision tree classifiers, $I(c) = -\log_{2}{(f_{c})}$ which gives
+
+\begin{align*}
+\mbox{Entropy} &= -\sum_{c}{f_{c} \cdot \log_{2}{(f_{c})}} & \\
+\end{align*}
+
+The choice of the $\mbox{log}$ function is beyond the scope of this article, but those interested may wish to take a look at [this article](https://towardsdatascience.com/entropy-is-a-measure-of-uncertainty-e2c000301c2c). Implementing an entropy function can be done as shown below
+
+```{r include = T}
+get_entropy <- function(x){
+  #Assume x is factor of labels
+  if(length(x) == 0) return(0)
+  weights = table(x)/length(x)
+  info_content = -weights*log2(weights)
+  entropy = sum(info_content)
+  return(entropy)
+}
+```
+
+We can perform a few checks using our function to check that it performs as expected
+
+```{r echo = T, collapse = T}
+#Entropy is zero?
+get_entropy(c(0,0,0,0,0))
+#Entropy is one?
+get_entropy(c(0,0,0,1,1,1))
+#Entropy is non-zero?
+get_entropy(salmon_fish$type)
+
+```
+
+If we only have one class then our data is homogeneous, which means there is no uncertainty regarding the data. If we have an equal number of observations across two classes, then uncertainty is at its maximum. Note that a lower value of entropy always means less uncertainty. A simple situation which may help one understand how entropy works is the flipping of a coin
+
+```{r echo = F, warnings = F, message = F}
+#Get entropy for probabilities
+
+vals <- double(length = 10)
+entrop <- double(length = 11)
+
+for(i in 0:10){
+  counts <- i
+  while(counts != 0){
+    vals[counts] <- 1
+    counts <- counts - 1
+  }
+  entrop[i+1] <- get_entropy(vals)
+}
+
+entrop2 <- data.frame(seq(0,1,0.1), entrop)
+names(entrop2) <- c("Probability", "Entropy")
+
+#Create graph
+
+ggplot(data = entrop2, aes(x = Probability, y = Entropy)) +
+  geom_point(size = 2) + 
+  stat_smooth(aes(x= Probability, y= Entropy), 
+              method = "lm", formula = y ~ poly(x, 8), se = FALSE) +
+  theme_classic() +
+  labs(title = "Entropy of weighted coin flip") +
+  theme(text=element_text(family="montsr"), 
+        plot.title = element_text(size=32),
+        plot.subtitle = element_text(size=22),
+        axis.title = element_text(size=22),
+        axis.text = element_text(size=16),
+        legend.text = element_text(size=16), 
+        legend.title = element_text(size=22)) +
+  scale_color_pilot()
+
+```
+
+For the coin flip (two classes), entropy is constrained between zero and one. A fair coin has the most uncertainty, whereas a coin with some bias towards one side has less entropy. This intuitively makes sense. 
+
+### Gini Index
 
 
 ```{r eval = F, include = F, fig.cap = "Decision tree on kyphosis following spinal surgery" }
 
-include_graphics(c("https://upload.wikimedia.org/wikipedia/commons/2/25/Cart_tree_kyphosis.png"))
+include_graphics(c("https://upload.wikimedia.org/wikipedia/commons/2/25/Cart_tree_kyphosis.png"), error = F)
 
 ```
 
