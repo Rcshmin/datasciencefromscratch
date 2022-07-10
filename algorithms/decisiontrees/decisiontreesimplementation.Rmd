@@ -9,6 +9,7 @@ output:
     lightbox: yes
     gallery: no
     highlight: tango
+    toc_depth: 2
 editor_options:
   chunk_output_type: console
 ---
@@ -36,11 +37,11 @@ salmon_fish <- read.csv(url("https://raw.githubusercontent.com/ritvikmath/YouTub
 
 ## What are decision trees?
 
-**Decision trees are a non-parametric supervised learning method**. **<span style="color: red;">Supervised</span>** means that the input and output data is labelled. **<span style="color: blue;">Non-parametric</span>** means that no assumptions are made regarding the assumptions of the population. This definition is obviously not that useful, but with some further consideration we can make some sense of it. **<span style="color: green;">Analogous to a tree in real life</span>**, a decision tree is a **tree-like model of decisions**. In essence, we pass this model data on several input variables, and ask it to create a tree that **predicts** the **value** of the **target variable**. This is all probably best understood through an example, so let's take a look at one...
+Decision trees are a non-parametric supervised learning method. Supervised means that the input and output data is labelled. Non-parametric means that no assumptions are made regarding the assumptions of the population. This definition is obviously not that useful, but with some further consideration we can make some sense of it. Analogous to a tree in real life, a decision tree is a tree-like model of decisions. In essence, we pass this model data on several input variables, and ask it to create a tree that predicts the value of the target variable. This is all probably best understood through an example, so let's take a look at one...
 
 ### Example
 
-In this example we consider how we can classify a fish as a salmon or tuna based off its length and weight. Looking at the below data set, it is easy to see some **patterns**, in how each type of fish is grouped based off its two **characteristics**. For instance, any fish with a length less than around 2.5 is a tuna. Continuing on, a fish with length greater than 2.5, and weight less than around 4 is a salmon. We could also say that a fish with length greater than 7.2 and weight greater than 4.1 is a tuna. You are probably getting the gist of it at this point...
+In this example we consider how we can classify a fish as a salmon or tuna based off its length and weight. Looking at the below data set, it is easy to see some patterns, in how each type of fish is grouped based off its two characteristics. For instance, any fish with a length less than around 2.5 is a tuna. Continuing on, a fish with length greater than 2.5, and weight less than around 4 is a salmon. We could also say that a fish with length greater than 7.2 and weight greater than 4.1 is a tuna. You are probably getting the gist of it at this point...
 
 ```{r, echo = F, out.width="100%", fig.align='center'}
 
@@ -76,7 +77,7 @@ grid.arrange(plot1, salmon_fish2, nrow=1, widths = c(2.75,1))
 
 ```
 
-If we take all of these splits, or otherwise **decisions** and **organised them**, it would look something like this
+If we take all of these splits, or otherwise decisions and organised them, it would look something like this
 
 ```{r echo = F, fig.align='center'}
 
@@ -90,7 +91,19 @@ prp(salmon_tree, fallen.leaves = FALSE, type=1, extra=1, varlen=0, faclen=0, yes
 
 ```
 
-And voila, we have our tree! So from referring to the diagram above, we can see that the decision tree has created splits across our input variables (weight and length) such that our scatterplot becomes partitioned into rectangular regions containing each type of the fish (the target variable). This is exactly what  
+And voila, we have our tree! From referring to the diagram above, we can see that the decision tree has created splits across our input variables (weight and length) such that our scatterplot becomes partitioned into rectangular regions containing each type of the fish (the target variable). This is exactly what the decision tree classifier does. Some of you may be asking why this is useful? Well suppose we have a noob fisherman in the Atlantic ocean (which only contains salmon and tuna for our purposes) who has just caught his first fish, but is unsure of what fish it is. Taking the decision tree just produced, this noob fisherman could then identify what fish he has caught. Well this is not exactly the most realistic scenario, but you get the idea hopefully. So now that we know what the algorithm does, lets take a look at some terms that are often thrown around when talking about decisions tree's.
+
+## Key Terminologies
+
+It would good if we could have some terminology to describe the different parts of a tree...
+
+* **Root Node**: The input data set or population used to create the decision tree is the root node. It is always the top most node in a decision tree from which the data set it split into different subsets
+* **Decision node**: Sub-nodes that are split into further sub-nodes. The decision nodes, as the name suggests, are the nodes which split our data set into subsets. From our example before, the $\mbox{length} \geq 3$  or $\mbox{length }<7$ are two of the many decision nodes 
+* **Parent and child node**: A node which is divided sub-nodes is the parent node of the sub-nodes, whereas the sub-nodes are the children of the given parent node. The $\mbox{weight} < 6.8$ is the parent node of the terminal nodes below it. 
+* **Leaf/terminal node**: 
+
+
+
 
 
 ```{r eval = F, include = F, fig.cap = "Decision tree on kyphosis following spinal surgery" }
