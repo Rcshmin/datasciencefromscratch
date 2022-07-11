@@ -8,7 +8,7 @@ output:
     thumbnails: no
     lightbox: yes
     gallery: no
-    highlight: espresso
+    highlight: tango
     toc_depth: 2
 editor_options:
   chunk_output_type: console
@@ -34,11 +34,11 @@ salmon_fish <- read.csv(url("https://raw.githubusercontent.com/ritvikmath/YouTub
 
 ```
 
-## What are decision trees?
+# What are decision trees?
 
 Decision trees are a non-parametric supervised learning method. Supervised means that the input and output data is labelled. Non-parametric means that no assumptions are made regarding the assumptions of the population. This definition is obviously not that useful, but with some further consideration we can make some sense of it. Analogous to a tree in real life, a decision tree is a tree-like model of decisions. In essence, we pass this model data on several input variables, and ask it to create a tree that predicts the value of the target variable. This is all probably best understood through an example, so let's take a look at one...
 
-### Example
+## Example
 
 In this example we consider how we can classify a fish as a salmon or tuna based off its length and weight. Looking at the below data set, it is easy to see some patterns, in how each type of fish is grouped based off its two characteristics. For instance, any fish with a length less than around 2.5 is a tuna. Continuing on, a fish with length greater than 2.5, and weight less than around 4 is a salmon. We could also say that a fish with length greater than 7.2 and weight greater than 4.1 is a tuna. You are probably getting the gist of it at this point...
 
@@ -92,7 +92,7 @@ prp(salmon_tree, fallen.leaves = FALSE, type=1, extra=1, varlen=0, faclen=0, yes
 
 And voila, we have our tree! From referring to the diagram above, we can see that the decision tree has created splits across our input variables (weight and length) such that our scatterplot becomes partitioned into rectangular regions containing each type of the fish (the target variable). This is exactly what the decision tree classifier does. Some of you may be asking why this is useful? Well suppose we have a noob fisherman in the Atlantic ocean (which only contains salmon and tuna for our purposes) who has just caught his first fish, but is unsure of what fish it is. Taking the decision tree just produced, this noob fisherman could then identify what fish he has caught. Well this is not exactly the most realistic scenario, but you get the idea hopefully. So now that we know what the algorithm does, lets take a look at some terms that are often thrown around when talking about decisions tree's.
 
-## Describing a tree
+# Describing a tree
 
 It would good if we could have some terminology to describe the different parts of a tree...
 
@@ -104,11 +104,11 @@ It would good if we could have some terminology to describe the different parts 
 * **Branch/sub-tree**: A subsection of the entire tree is called branch or sub-tree
 
 
-## Measures of uncertainty
+# Measures of uncertainty
 
 We saw earlier that the purpose of a decision tree is to partition the data into regions of a certain class (or try its best to do so). There were many choices for the split among our two input variables, but one may naturally ask which of these splits are the best, and in which order should we carry them out, such that the resultant data is partitioned as good as possible. Now as it turns out, this question relates the notion of uncertainty. The best split will be the one that minimizes the uncertainty of the child nodes. More specifically, we seek to achieve the maximum level of homogeneity (sameness) in the target variable, such that the total uncertainty of the child nodes are less than the parent node. 
 
-### Entropy
+## Entropy
 
 Entropy quantifies the amount of uncertainty involved in the outcome of a process. It has formula 
 \begin{align*}
@@ -185,9 +185,56 @@ ggplot(data = entrop2, aes(x = Probability, y = Entropy)) +
 
 ```
 
-For the coin flip (two classes), entropy is constrained between zero and one. A fair coin has the most uncertainty, whereas a coin with some bias towards one side has less entropy. This intuitively makes sense. 
+For the coin flip (two classes), entropy is constrained between zero and one. A fair coin has the most uncertainty, whereas a coin with some bias towards one side has less uncertainty. This intuitively makes sense. 
 
-### Gini Index
+## Gini impurity
+
+Gini impurity is one of the other available measures for calculating uncertainty. While entropy does not have an intuitive interpretation of its formula, we can say that gini impurity calculates the amount of probability of a specific feature that is classified incorrectly when selected randomly precisely. It has formula
+
+\begin{align*}
+\mbox{Gini index} &= 1 - \sum_{i=1}^{n}{(p_{i})^2}
+\end{align*}
+
+where $p_{i}$ is the probability of an element being classified for a distinct class. This can also be easily implemented
+
+```{r include=T}
+get_gini_impurity <- function(x){
+  #Assume x is a factor with labels
+  if(length(x) == 0) return(0)
+  weights = table(x)/length(x)
+  weights_squared = weights^2
+  sum_of_squares = sum(weights_squared)
+  gini = 1 - sum_of_squares
+  return(gini)
+}
+```
+As with entropy, we can also perform some checks
+
+```{r collapse = T}
+#Minimum uncertainty is 0
+get_gini_impurity(c(0,0,0,0,0))
+#Maximum uncertainty is 0.5 for two classes
+get_gini_impurity(c(0,0,1,1))
+#Between 0.5 and 1?
+get_gini_impurity(c(1,1,2,2,3,3,4,4))
+```
+Gini impurity in the case of two classes is constrained between zero and half, with zero being minimum uncertainty and half being maximum uncertainty. However with more than two classes, the measure will always be in between zero and one. This is in contrast to entropy which has no upper bound. Once again, note that higher values of gini impurity represent greater uncertainty and vice versa. 
+
+## Information gain
+
+Information gain serves an extension to the calculation of entropy. It is the difference in entropy between a parent node and the average entropy of its children. 
+
+\begin{align*}
+\overbrace{\mbox{IG}(T,a)}^{\mbox{information gain}} &= \overbrace{H(T)}^{\mbox{entropy of parent}} - \overbrace{H(T|a)}^{\mbox{average entropy of children}} & \\
+\end{align*}
+
+While we seek to minimize entropy, we alternatively seek to maximize information gain. Or in other words, we seek to find the split with the most information gain.
+
+# Stopping conditions
+
+Now that we know how to find the best split (the one that reduces the most uncertainty) and that decision trees essentially recursively split the data into regions, it is important to consider the stopping conditions. This is primarily due to the fact that the CART (Classification and Regression Trees) algorithms are greedy. What I mean by them being 'greedy' is that they will keep splitting the data in an effort to reduce entropy unless told otherwise. This produces a 'locally optimal solution' rather than a 'globally optimal solution'; in simpler terms, we could say that a decision tree never reconsiders its choices, and only makes whatever choice seems best at the moment. To prevent such behaviour we will employ some stopping conditions...
+
+* 
 
 
 ```{r eval = F, include = F, fig.cap = "Decision tree on kyphosis following spinal surgery" }
