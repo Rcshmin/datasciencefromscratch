@@ -9,7 +9,7 @@ output:
     lightbox: yes
     gallery: no
     highlight: tango
-    toc_depth: 2
+    toc_depth: 4
 editor_options:
   chunk_output_type: console
 ---
@@ -232,9 +232,56 @@ While we seek to minimize entropy, we alternatively seek to maximize information
 
 # Stopping conditions
 
-Now that we know how to find the best split (the one that reduces the most uncertainty) and that decision trees essentially recursively split the data into regions, it is important to consider the stopping conditions. This is primarily due to the fact that the CART (Classification and Regression Trees) algorithms are greedy. What I mean by them being 'greedy' is that they will keep splitting the data in an effort to reduce entropy unless told otherwise. This produces a 'locally optimal solution' rather than a 'globally optimal solution'; in simpler terms, we could say that a decision tree never reconsiders its choices, and only makes whatever choice seems best at the moment. To prevent such behaviour we will employ some stopping conditions...
+Now that we know how to find the best split (the one that reduces the most uncertainty) and that decision trees essentially recursively split the data into regions, it is important to consider the stopping conditions. This is primarily due to the fact that the CART (Classification and Regression Trees) algorithms are greedy. What I mean by them being 'greedy' is that they will keep splitting the data in an effort to reduce entropy unless told otherwise. This produces a 'locally optimal solution' rather than a 'globally optimal solution'; in simpler terms, we could say that a decision tree never reconsiders its choices, and only makes whatever choice seems best at the moment. While we can not necessarily prevent the 'live in the moment' behavior of the decision tree, it is important to stop the decision tree from partitioning our data infinitely. A solution in which we do not restrain the algorithm will be computationally expensive, difficult to interpret and probably be overfitted to the data.
 
-* 
+* **Minimum sample for a new node**: Some implementations of CART algorithms such as the one in `rpart` often require at least 5 observations to create a new node
+* **Minimum amount of information gain or entropy**: We could also tell the decision tree that is not able to create a new node unless the entropy for that split meets a threshold value
+* **Minimum depth of node**: A pre-specified limit for the depth will stop the algorithm from making too many splits
+
+# Helper functions
+
+Before we begin creating our helper function for the decision tree classifier, it important to define what form the input data will be in for our algorithm. We wil use the following form 
+
+\begin{bmatrix}
+  x_{1} & x_{2} & x_{3} & x_{4} & \dots & Y
+\end{bmatrix}
+
+
+## Train-test split
+
+We will first code a helper function to split our data into a training data set, which will be used to train the decision tree, and then a testing data set, which will be used to test how well the decision tree performs
+
+```{r include = T, eval = F}
+
+get_train_test <- function(df, train_size){
+  observations = 1:nrow(df)
+  #Option for a proportion or number
+  if(train_size < 1){
+    test_size_f = round(train_size*nrow(df))
+  } else {
+    test_size_f = train_size
+  }
+  #Get index of train values
+  train_index = sample(observations, size = test_size_f)
+  test_observations = nrow(df) - length(train_index)
+  #Get index of test values
+  test_index = double(length = length(observations))
+  for(i in 1:length(observations)){
+    if(any(observations[i] == train_index)){
+      next(i)
+    } else {
+      test_index[i] = observations[i]
+    }
+  }
+  test_index_f = c(subset(test_index, test_index > 0))
+  #Create df's from index values
+  train_df = df[train_index, ]
+  test_df = df[test_index_f, ]
+  return(list(train_df, test_df))
+}
+
+```
+
 
 
 ```{r eval = F, include = F, fig.cap = "Decision tree on kyphosis following spinal surgery" }
