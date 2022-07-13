@@ -240,16 +240,18 @@ Now that we know how to find the best split (the one that reduces the most uncer
 
 # Helper functions
 
-Before we begin creating our helper function for the decision tree classifier, it important to define what form the input data will be in for our algorithm. We wil use the following form 
+Before we begin creating our helper function for the decision tree classifier, it important to define what form the input data will be in for our algorithm. We will use the following form 
 
 \begin{bmatrix}
-  x_{1} & x_{2} & x_{3} & x_{4} & \dots & Y
+  x_{1} & x_{2} & x_{3} & x_{4} & \dots & x_{k} & Y
 \end{bmatrix}
+
+where $x_{1}, x_{2}, x_{3}, ... , x_{k}$ are the k features (variables) we will use to train our model and where $Y$ is the target variable (the labels)
 
 
 ## Train-test split
 
-We will first code a helper function to split our data into a training data set, which will be used to train the decision tree, and then a testing data set, which will be used to test how well the decision tree performs
+We will first code  function to split our data into a training data set, which will be used to train the decision tree, and then a testing data set, which will be used to test how well the decision tree performs. Note that this function is not a helper that will be called by the main algorithm, but I could not find a better section to put this under.
 
 ```{r include = T, eval = F}
 
@@ -282,16 +284,129 @@ get_train_test <- function(df, train_size){
 
 ```
 
+## Checking the purity
+
+This helper will be used to check whether a subset of the original data is pure. As discussed before, a pure node is a point at which the subset of the original data contains only one class. If we find that the data is pure, we would not want to continue splitting the data, as entropy would be zero at that point. In other words, we would have full certainty over the class of the points in that node. 
+
+```{r}
+check_purity <- function(data){
+  #Get unique labels
+  labels = length(unique(pull(data[, -1])))
+  #Check if there is only one
+  ifelse(labels == 1, return(TRUE), return(FALSE))
+}
+```
+
+## Classification 
+
+After we have decided to stop creating new split at some point of our tree, most likely when a stopping condition is reached, we need to return a classification for the points in whichever subset of the original data we have at the node. If the data is pure, then our choice of what classification to make is rather simple. If the data is not pure, we will use the class that appears the most among the data points. 
+
+```{r}
+classify_data <- function(data){
+  #Get labels
+  get_labels = pull(data[, -1])
+  #Get label frequency and max
+  label_freq = table(get_labels)
+  label_freq_a = as.data.frame(label_freq)
+  label_dom = max(label_freq)
+  #Get classification
+  for(i in 1:nrow(label_freq_a)){
+    if(label_freq_a$Freq[i] == label_dom){
+      classification = as.character(label_freq_a$get_labels[i])
+    } else {
+      next(i)
+    }
+  }
+  return(classification)
+}
+```
+
+## Splitting the data
+
+I am going to, un-intuitively, make the helper that will split the data before making the helper for the potential splits. Once we have a potential split value for a given feature we need to separate the parent node into two children. Anything above the value ($>$) will be coined as the right node, and anything below the value ($\leq$) will be termed the left node. These two nodes, together, are the children of the parent node.
+
+```{r}
+split_data <- function(data, split_column, split_value){
+  split_c = data[[split_column]]
+  #Filter the data into above and below
+  data_below = data[split_c <= split_value, ]
+  data_above = data[split_c > split_value, ]
+  return(list(data_above, data_below))
+}
+
+```
+
+## Potential splits 
+
+The potential split helper(s) are arguably the most important helper. These helpers, as the name suggests, will search our data for the split that provides the most certainty regarding the classes of the child nodes. It will return a feature, and a value for that feature for which we must split. First and foremost, we need to consider the manner in which we will search our data. There are several ways to approach the search stage. 
 
 
-```{r eval = F, include = F, fig.cap = "Decision tree on kyphosis following spinal surgery" }
 
-include_graphics(c("https://upload.wikimedia.org/wikipedia/commons/2/25/Cart_tree_kyphosis.png"), error = F)
+```{r eval = F, include = F}
+#Building a decision tree require new concepts and skills that I previously did not have. I will keep log of my experimentation with such techniques here.
+
+#Recursion practice
+
+#Function that recursively makes a vector of length zero and keeps count as well
+
+get_zero <- function(x, counter = 0){
+  if(length(x) == 1){
+    return(counter + 1)
+  } else {
+    curr_length = length(x)
+    x = x[1:(length(x) - 1)]
+    return(get_zero(x, counter = counter + 1))
+  }
+}
+
+#Function that adds or subtracts two's then an one to a number until it is the number 10, and keeps count as well
+
+get_ten <- function(x, counter = 0){
+  if(x == 10) return(counter)
+  if(x > 10){
+    if(x %% 2 == 0){
+      #Divisible by 2 case
+      x = x - 2
+      return(get_ten(x, counter = counter + 1))
+    } else {
+      #Not divisible by 2 case
+      x = x - 1
+      return(get_ten(x, counter = counter + 1))
+    }
+  } else {
+    if(x %% 2 == 0){
+      #Divisible by 2 case
+      x = x + 2
+      return(get_ten(x, counter = counter + 1))
+    } else {
+      #Not divisible by 2 case
+      x = x + 1
+      return(get_ten(x, counter = counter + 1))
+    }
+  }
+}
+
+#Generating fibonacci numbers
+
+get_fibonacci <- function(x, fibonacci = 2, initial = c(0, 1)){
+  if(x == 1) return(0)
+  if(x == 2) return(1)
+  if(x == fibonacci){
+    return(max(initial))
+  } else {
+    append = length(initial)
+    initial[append + 1] = 0
+    initial[length(initial)] = initial[length(initial) - 1] + initial[length(initial) - 2]
+    return(get_fibonacci(x, fibonacci = fibonacci + 1, initial = initial))
+  }
+}
 
 ```
 
 ```{r include = F, eval = F}
 **<span style="color: green;">whether this patient has kyphosis?</span>**
+  
+include_graphics(c("https://upload.wikimedia.org/wikipedia/commons/2/25/Cart_tree_kyphosis.png"), error = F)
 ```
 
 
