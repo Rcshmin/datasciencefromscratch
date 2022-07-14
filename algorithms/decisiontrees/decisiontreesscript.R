@@ -101,5 +101,40 @@ get_potential_splits <- function(data){
   return(potential_splits)
 }
 
+calculate_overall_entropy <- function(data_below, data_above){
+  #Proportion of samples in left and right children
+  n = length(data_below) + length(data_above)
+  p_data_below = length(data_below)/n
+  p_data_above = length(data_above)/n
+  #Calculate overall entropy
+  overall_entropy = (p_data_below*get_entropy(pull(data_below[, -1]))) +
+    (p_data_above*get_entropy(pull(data_above[, -1])))
+  return(overall_entropy)
+}
+
+determine_best_split <- function(data, potential_splits){
+  #Initialize overall entropy and col 
+  running_entropy = 9999
+  best_split_value = 0
+  best_split_column = ""
+  #Find best entropy over potential splits
+  for(j in 1:ncol(potential_splits)){
+    for(i in unique(potential_splits[, j])){
+      mask_val = i 
+      mask_col = j
+      splits = split_data(data = data, split_column = mask_col, split_value = mask_val)
+      relative_entropy = calculate_overall_entropy(data_above = splits[[1]], data_below = splits[[2]])
+      if(relative_entropy < running_entropy){
+        running_entropy = relative_entropy
+        best_split_value = mask_val
+        best_split_column = colnames(potential_splits)[j]
+      } else {
+        next(i)
+      }
+    }
+  }
+  return(list(best_split_column, best_split_value))
+}
+
 
 

@@ -88,6 +88,8 @@ salmon_tree <- rpart(type ~ length + weight, data = salmon_fish)
 
 prp(salmon_tree, fallen.leaves = FALSE, type=1, extra=1, varlen=0, faclen=0, yesno.yshift=-1, cex = 1.5)
 
+rpart(data = iris, Species ~ Sepal.Length + Sepal.Width + Petal.Length + Petal.Width)
+
 ```
 
 And voila, we have our tree! From referring to the diagram above, we can see that the decision tree has created splits across our input variables (weight and length) such that our scatterplot becomes partitioned into rectangular regions containing each type of the fish (the target variable). This is exactly what the decision tree classifier does. Some of you may be asking why this is useful? Well suppose we have a noob fisherman in the Atlantic ocean (which only contains salmon and tuna for our purposes) who has just caught his first fish, but is unsure of what fish it is. Taking the decision tree just produced, this noob fisherman could then identify what fish he has caught. Well this is not exactly the most realistic scenario, but you get the idea hopefully. So now that we know what the algorithm does, lets take a look at some terms that are often thrown around when talking about decisions tree's.
@@ -231,7 +233,7 @@ Information gain serves an extension to the calculation of entropy. It is the di
 While we seek to minimize entropy, we alternatively seek to maximize information gain. Or in other words, we seek to find the split with the most information gain.
 
 ```{r}
-get_information_gain <- function()
+get_information_gain <- function(){}
 ```
 
 
@@ -338,7 +340,6 @@ split_data <- function(data, split_column, split_value){
   data_above = data[split_c > split_value, ]
   return(list(data_above, data_below))
 }
-
 ```
 
 ## Potential and best splits
@@ -368,17 +369,51 @@ get_potential_splits <- function(data){
   dat = dat[, 1:col_n]
   potential_splits = dat
   return(potential_splits)
-  }
-  
-
-
-get_potential_splits(data = iris)
-
-nrow(get_potential_splits(salmon_fish))
-
-
+}
 
 ```
+
+```{r}
+calculate_overall_entropy <- function(data_below, data_above){
+  #Proportion of samples in left and right children
+  n = nrow(data_below) + nrow(data_above)
+  p_data_below = nrow(data_below)/n
+  p_data_above = nrow(data_above)/n
+  #Calculate overall entropy
+  overall_entropy = ((p_data_below*get_entropy(as.character(pull(data_below[, -1])))) +
+                       (p_data_above*get_entropy(as.character(pull(data_above[, -1])))))
+  return(overall_entropy)
+}
+```
+
+```{r}
+determine_best_split <- function(data, potential_splits){
+  #Initialize overall entropy and col 
+  running_entropy = 9999
+  best_split_value = 0
+  best_split_column = ""
+  #Find best entropy over potential splits
+  for(j in 1:ncol(potential_splits)){
+    for(i in unique(potential_splits[, j])){
+      mask_val = i 
+      mask_col = j
+      splits = split_data(data = data, split_column = mask_col, split_value = mask_val)
+      relative_entropy = calculate_overall_entropy(data_above = splits[[1]], data_below = splits[[2]])
+      if(relative_entropy < running_entropy){
+        running_entropy = relative_entropy
+        best_split_value = mask_val
+        best_split_column = colnames(potential_splits)[j]
+      } else {
+        next(i)
+      }
+    }
+  }
+  return(list(best_split_column, best_split_value))
+}
+
+```
+
+
 
 
 
