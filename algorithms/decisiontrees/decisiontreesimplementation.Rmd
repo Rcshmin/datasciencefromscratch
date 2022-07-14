@@ -230,6 +230,11 @@ Information gain serves an extension to the calculation of entropy. It is the di
 
 While we seek to minimize entropy, we alternatively seek to maximize information gain. Or in other words, we seek to find the split with the most information gain.
 
+```{r}
+get_information_gain <- function()
+```
+
+
 # Stopping conditions
 
 Now that we know how to find the best split (the one that reduces the most uncertainty) and that decision trees essentially recursively split the data into regions, it is important to consider the stopping conditions. This is primarily due to the fact that the CART (Classification and Regression Trees) algorithms are greedy. What I mean by them being 'greedy' is that they will keep splitting the data in an effort to reduce entropy unless told otherwise. This produces a 'locally optimal solution' rather than a 'globally optimal solution'; in simpler terms, we could say that a decision tree never reconsiders its choices, and only makes whatever choice seems best at the moment. While we can not necessarily prevent the 'live in the moment' behavior of the decision tree, it is important to stop the decision tree from partitioning our data infinitely. A solution in which we do not restrain the algorithm will be computationally expensive, difficult to interpret and probably be overfitted to the data.
@@ -336,9 +341,44 @@ split_data <- function(data, split_column, split_value){
 
 ```
 
-## Potential splits 
+## Potential and best splits
 
-The potential split helper(s) are arguably the most important helper. These helpers, as the name suggests, will search our data for the split that provides the most certainty regarding the classes of the child nodes. It will return a feature, and a value for that feature for which we must split. First and foremost, we need to consider the manner in which we will search our data. There are several ways to approach the search stage. 
+The potential split helper(s) are arguably the most important helper. These helpers, as the name suggests, will search our data for the split that provides the most certainty regarding the classes of the child nodes. It will return a feature, and a value for that feature for which we must split. First and foremost, we need to consider the manner in which we will search our data. There are several ways to approach the search stage. One such way is to increment through the range of a feature by a learning rate; at each of these increment, we will calculate the entropy of a split made at that point. The effectiveness of this approach is largely determined by the learning rate. A very small learning rate will take a long time iterate through the data, but will be more accurate. The converse is also true for a large learning rate. Another approach would be to only have potential splits be made on each real value a feature has. The middle ground between these approaches is to check for a potential splits in the middle of two values for a given features. I will use the third approach as it is the easiest to implement
+
+```{r}
+get_potential_splits <- function(data){
+  #Sorting stage
+  data = data
+  col_n = ncol(data) - 1
+  for(i in 1:col_n){
+    data_i = sort(data[, i])
+    data[, i] = data_i
+  }
+  #Creating the splits
+  dat = data[0, ]
+  for(j in 1:col_n){
+    for(i in 2:nrow(data)){
+      curr_val = data[i, j]
+      previous_val = data[(i-1), j]
+      potential_val = (curr_val + previous_val)/2
+      dat[(i-1), j] = potential_val
+    }
+  }
+  dat[nrow(dat)+1, ] = data[nrow(data), ]
+  dat = dat[, 1:col_n]
+  potential_splits = dat
+  return(potential_splits)
+  }
+  
+
+
+get_potential_splits(data = iris)
+
+nrow(get_potential_splits(salmon_fish))
+
+
+
+```
 
 
 

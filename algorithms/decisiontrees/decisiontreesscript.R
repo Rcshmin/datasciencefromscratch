@@ -5,6 +5,7 @@ weights = table(x)/length(x)
 info_content = -weights*log2(weights)
 entropy = sum(info_content)
 return(entropy)
+}
 
 get_gini_impurity <- function(x){
 #Assume x is a factor with labels
@@ -14,6 +15,7 @@ weights_squared = weights^2
 sum_of_squares = sum(weights_squared)
 gini = 1 - sum_of_squares
 return(gini)
+}
 
 get_train_test <- function(df, train_size){
 observations = 1:nrow(df)
@@ -74,3 +76,30 @@ split_data <- function(data, split_column, split_value){
   data_above = data[split_c > split_value, ]
   return(list(data_above, data_below))
 }
+
+get_potential_splits <- function(data){
+  #Sorting stage
+  data = data
+  col_n = ncol(data) - 1
+  for(i in 1:col_n){
+    data_i = sort(data[, i])
+    data[, i] = data_i
+  }
+  #Creating the splits
+  dat = data[0, ]
+  for(j in 1:col_n){
+    for(i in 2:nrow(data)){
+      curr_val = data[i, j]
+      previous_val = data[(i-1), j]
+      potential_val = (curr_val + previous_val)/2
+      dat[(i-1), j] = potential_val
+    }
+  }
+  dat[nrow(dat)+1, ] = data[nrow(data), ]
+  dat = dat[, 1:col_n]
+  potential_splits = dat
+  return(potential_splits)
+}
+
+
+
