@@ -88,8 +88,6 @@ salmon_tree <- rpart(type ~ length + weight, data = salmon_fish)
 
 prp(salmon_tree, fallen.leaves = FALSE, type=1, extra=1, varlen=0, faclen=0, yesno.yshift=-1, cex = 1.5)
 
-rpart(data = iris, Species ~ Sepal.Length + Sepal.Width + Petal.Length + Petal.Width)
-
 ```
 
 And voila, we have our tree! From referring to the diagram above, we can see that the decision tree has created splits across our input variables (weight and length) such that our scatterplot becomes partitioned into rectangular regions containing each type of the fish (the target variable). This is exactly what the decision tree classifier does. Some of you may be asking why this is useful? Well suppose we have a noob fisherman in the Atlantic ocean (which only contains salmon and tuna for our purposes) who has just caught his first fish, but is unsure of what fish it is. Taking the decision tree just produced, this noob fisherman could then identify what fish he has caught. Well this is not exactly the most realistic scenario, but you get the idea hopefully. So now that we know what the algorithm does, lets take a look at some terms that are often thrown around when talking about decisions tree's.
@@ -412,6 +410,23 @@ determine_best_split <- function(data, potential_splits){
 }
 
 ```
+
+# The main algorithm
+
+The main algorithm is a recursive function that calls the helpers to split the data, given that the stopping conditions have not been violated. We will input the data into this function, and it will return the tree. 
+
+```{r}
+decision_tree_algorithm <- function(df, counter = 0, min_samples, max_depth){
+  data = df
+  #Check whether stopping conditions have been violated
+  if(check_purity(data) | nrow(data) < min_samples | counter == max_depth){
+    classification = classify_data
+    return(classification)
+  }
+  
+}
+```
+
 
 
 

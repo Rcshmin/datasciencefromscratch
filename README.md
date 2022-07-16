@@ -10,4 +10,4 @@ This is a repository I have created to **track my progress** in data science and
 
 | Algorithm  | Description | Implementation | Link | Creation Date | Last Update |
 | :---: | :---: | :---: | :---: | :---: | :---: |
-| Decision Trees | From scratch creation of a decision tree :palm_tree:, accompanied by an explanation of the underlying logic | R | [Decision tree implementation](https://htmlpreview.github.io/?https://github.com/Rcshmin/datasciencefromscratch/blob/main/algorithms/decisiontrees/decisiontreesimplementation.html) | 5.7.2022 | N/A |
+| Decision Trees | From scratch creation of a decision tree :palm_tree:, accompanied by an explanation of the underlying logic | R | [Decision tree implementation](https://rpubs.com/Rcshmin/924453) | 5.7.2022 | N/A |
