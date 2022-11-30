@@ -2050,7 +2050,6 @@ entropy of its children.</p>
 <p>While we seek to minimize entropy, we alternatively seek to maximize
 information gain. Or in other words, we seek to find the split with the
 most information gain.</p>
-<pre class="r"><code>get_information_gain &lt;- function(){}</code></pre>
 </div>
 </div>
 <div id="stopping-conditions" class="section level1">
@@ -2271,15 +2270,33 @@ easiest to implement</p>
 split the data, given that the stopping conditions have not been
 violated. We will input the data into this function, and it will return
 the tree.</p>
-<pre class="r"><code>decision_tree_algorithm &lt;- function(df, counter = 0, min_samples, max_depth){
+<pre class="r"><code>decision_tree_algorithm &lt;- function(df, counter = 0, min_samples, max_depth, tree){
   data = df
   #Check whether stopping conditions have been violated
-  if(check_purity(data) | nrow(data) &lt; min_samples | counter == max_depth){
-    classification = classify_data
-    return(classification)
+  if(any(check_purity(data), nrow(data) &lt; min_samples, counter == max_depth)){
+    classification = classify_data(data)
+    return(print(classification))
+  } else {
+   #Recursive part
+    
+    #Helper functions
+    potential_splits = get_potential_splits(data)
+    split_g = determine_best_split(data, potential_splits)
+    split_column = split_g[[1]]
+    split_value = split_g[[2]]
+    data_g = split_data(data, split_column, split_value)
+    data_above = data_g[[1]]
+    data_below = data_g[[2]]
+    print(paste(&quot;Is&quot;, split_column, &quot;&lt;&quot;, split_value))
+    #Find the answers
+    yes_answer = decision_tree_algorithm(df = data_below, counter = counter + 1, min_samples, max_depth)
+    no_answer = decision_tree_algorithm(df = data_above, counter = counter + 1, min_samples, max_depth)
+    
   }
   
-}</code></pre>
+}
+
+rtree &lt;- list(&quot;Length &lt; 3?&quot;, &quot;Tuna&quot;, list(&quot;Weight &lt; 4&quot;, &quot;Salmon&quot;, list(&quot;Length &gt; 6.75&quot;, &quot;Tuna&quot;, &quot;Salmon&quot;)))</code></pre>
 </div>
 </div>
 

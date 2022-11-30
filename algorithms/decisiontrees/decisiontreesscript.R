@@ -136,5 +136,29 @@ determine_best_split <- function(data, potential_splits){
   return(list(best_split_column, best_split_value))
 }
 
+decision_tree_algorithm <- function(df, counter = 0, min_samples, max_depth, tree){
+  data = df
+  #Check whether stopping conditions have been violated
+  if(any(check_purity(data), nrow(data) < min_samples, counter == max_depth)){
+    classification = classify_data(data)
+    return(print(classification))
+  } else {
+    #Recursive part
+    
+    #Helper functions
+    potential_splits = get_potential_splits(data)
+    split_g = determine_best_split(data, potential_splits)
+    split_column = split_g[[1]]
+    split_value = split_g[[2]]
+    data_g = split_data(data, split_column, split_value)
+    data_above = data_g[[1]]
+    data_below = data_g[[2]]
+    print(paste("Is", split_column, "<", split_value))
+    #Find the answers
+    yes_answer = decision_tree_algorithm(df = data_below, counter = counter + 1, min_samples, max_depth)
+    no_answer = decision_tree_algorithm(df = data_above, counter = counter + 1, min_samples, max_depth)
+  }
+}
+
 
 

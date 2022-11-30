@@ -230,11 +230,6 @@ Information gain serves an extension to the calculation of entropy. It is the di
 
 While we seek to minimize entropy, we alternatively seek to maximize information gain. Or in other words, we seek to find the split with the most information gain.
 
-```{r}
-get_information_gain <- function(){}
-```
-
-
 # Stopping conditions
 
 Now that we know how to find the best split (the one that reduces the most uncertainty) and that decision trees essentially recursively split the data into regions, it is important to consider the stopping conditions. This is primarily due to the fact that the CART (Classification and Regression Trees) algorithms are greedy. What I mean by them being 'greedy' is that they will keep splitting the data in an effort to reduce entropy unless told otherwise. This produces a 'locally optimal solution' rather than a 'globally optimal solution'; in simpler terms, we could say that a decision tree never reconsiders its choices, and only makes whatever choice seems best at the moment. While we can not necessarily prevent the 'live in the moment' behavior of the decision tree, it is important to stop the decision tree from partitioning our data infinitely. A solution in which we do not restrain the algorithm will be computationally expensive, difficult to interpret and probably be overfitted to the data.
@@ -415,17 +410,61 @@ determine_best_split <- function(data, potential_splits){
 
 The main algorithm is a recursive function that calls the helpers to split the data, given that the stopping conditions have not been violated. We will input the data into this function, and it will return the tree. 
 
-```{r}
-decision_tree_algorithm <- function(df, counter = 0, min_samples, max_depth){
+```{r eval = FALSE}
+
+decision_tree_algorithm <- function(df, 
+                                    counter = 1, 
+                                    min_samples, 
+                                    max_depth){
   data = df
   #Check whether stopping conditions have been violated
-  if(check_purity(data) | nrow(data) < min_samples | counter == max_depth){
-    classification = classify_data
-    return(classification)
+  if(any(check_purity(data), nrow(data) < min_samples, (counter - 1) == max_depth)){
+    return()
+  } else {
+   #Recursive part
+    
+    #Helper functions
+    potential_splits = get_potential_splits(data)
+    split_g = determine_best_split(data, potential_splits)
+    split_column = split_g[[1]]
+    split_value = split_g[[2]]
+    data_g = split_data(data, split_column, split_value)
+    data_above = data_g[[1]]
+    data_below = data_g[[2]]
+    print(paste(split_column, split_value))
+    #Find the answers
+    yes_answer = decision_tree_algorithm(df = data_below, counter = counter + 1, min_samples, max_depth, splitvec)
+    no_answer = decision_tree_algorithm(df = data_above, counter = counter + 1, min_samples, max_depth, splitve)
+    
   }
   
 }
+
 ```
+
+```{r}
+
+decision_tree <- function(df, min_samples, max_depth){
+  
+  #Store decisions and reformat
+  decisions = capture.output(decision_tree_algorithm(df = df, min_samples = min_samples, max_depth = max_depth), append = F)
+  decisions_split = as.data.frame(strsplit(decisions, split = " "))
+  decisions_df = decisions_split[-1, ]
+  decisions_df_clean = as.data.frame(sapply(decisions_df, function(x) gsub("\"", "", x)))
+  decisions_df_t = as.data.frame(t(decisions_df_clean))
+  
+  return(decisions_df_t)
+}
+
+
+d11 = decision_tree(df = salmon_fish, min_samples = 10, max_depth = 10)
+
+decisions = capture.output(decision_tree_algorithm(df = salmon_fish, max_depth = 4, min_samples = 10))
+
+rtree <- list("Length < 3?", "Tuna", list("Weight < 4", "Salmon", list("Length > 6.75", "Tuna", "Salmon")))
+
+```
+
 
 
 
@@ -490,6 +529,43 @@ get_fibonacci <- function(x, fibonacci = 2, initial = c(0, 1)){
     return(get_fibonacci(x, fibonacci = fibonacci + 1, initial = initial))
   }
 }
+
+#Archive of old function
+
+decision_tree_algorithm <- function(df, 
+                                    counter = 1, 
+                                    min_samples, 
+                                    max_depth){
+  data = df
+  #Check whether stopping conditions have been violated
+  if(any(check_purity(data), nrow(data) < min_samples, (counter - 1) == max_depth)){
+    classification = classify_data(data)
+    return(print(paste(classification, counter)))
+  } else {
+   #Recursive part
+    
+    #Helper functions
+    potential_splits = get_potential_splits(data)
+    split_g = determine_best_split(data, potential_splits)
+    split_column = split_g[[1]]
+    split_value = split_g[[2]]
+    data_g = split_data(data, split_column, split_value)
+    data_above = data_g[[1]]
+    data_below = data_g[[2]]
+    print(paste(split_column, split_value, counter))
+    #Find the answers
+    yes_answer = decision_tree_algorithm(df = data_below, counter = counter + 1, min_samples, max_depth)
+    no_answer = decision_tree_algorithm(df = data_above, counter = counter + 1, min_samples, max_depth)
+    
+  }
+  
+}
+
+decision_tree_algorithm(df = salmon_fish, min_samples = 10, max_depth = 3)
+
+test_tree =  rpart(type ~ weight + length, data = salmon_fish, maxdepth = 3, parms = list(split = "information"))
+
+prp(test_tree)
 
 ```
 
