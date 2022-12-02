@@ -27,6 +27,7 @@ library(kableExtra)
 library(gridExtra)
 library(rpart)
 library(rpart.plot)
+library(cowplot)
 
 #Global chunk datasets
 
@@ -408,18 +409,21 @@ determine_best_split <- function(data, potential_splits){
 
 # The main algorithm
 
-The main algorithm is a recursive function that calls the helpers to split the data, given that the stopping conditions have not been violated. We will input the data into this function, and it will return the tree. 
+## Recursive function
 
-```{r eval = FALSE}
+The main algorithm is a recursive function that calls the helpers to split the data, given that the stopping conditions have not been violated. In the below function, the stopping conditions are first checked. There are three conditions implemented. Namely, whether the data is fully pure, whether there is enough data points to create a new splitting node, and whether the maximum depth of the tree has been reached. The function then uses the helpers that were created earlier to recursively split the data, generating a 'yes' and 'no' answer. It prints all of this information as it does it; more nuanced code would likely build and print the tree in this same function, but I was unable to build the necessary code to do so
+
+```{r}
 
 decision_tree_algorithm <- function(df, 
                                     counter = 1, 
                                     min_samples, 
-                                    max_depth){
+                                    max_depth, is.child = "root"){
   data = df
   #Check whether stopping conditions have been violated
   if(any(check_purity(data), nrow(data) < min_samples, (counter - 1) == max_depth)){
-    return()
+    classification = classify_data(data)
+    return(print(paste(classification, is.child, counter)))
   } else {
    #Recursive part
     
@@ -431,16 +435,32 @@ decision_tree_algorithm <- function(df,
     data_g = split_data(data, split_column, split_value)
     data_above = data_g[[1]]
     data_below = data_g[[2]]
-    print(paste(split_column, split_value))
+    print(paste(split_column, split_value, is.child, counter))
     #Find the answers
-    yes_answer = decision_tree_algorithm(df = data_below, counter = counter + 1, min_samples, max_depth, splitvec)
-    no_answer = decision_tree_algorithm(df = data_above, counter = counter + 1, min_samples, max_depth, splitve)
+    yes_answer = decision_tree_algorithm(df = data_below, counter = counter + 1, min_samples, max_depth, is.child = "yes <=")
+    no_answer = decision_tree_algorithm(df = data_above, counter = counter + 1, min_samples, max_depth, is.child = "no >")
     
   }
   
 }
 
+
 ```
+
+So the main algorithm yields the following output on the salmon-fish data...
+
+```{r echo = T}
+
+decision_tree_algorithm(df = salmon_fish, min_samples = 1, max_depth = 3)
+
+```
+
+Now this is obviously not what a decision tree looks like (as was shown earlier). But it is a step in the right direction. There are all the essential components of a decision tree in the jumble of output, but it requires sorting to be more comprehensible.
+
+## Organising function
+
+This function calls the decision tree recursive algorithm, captures the output and re-formats in into a data frame. An efficient implementation will likely not need this function, but since I was unable to fully incorporate the whole process in the recursive function, here we are. 
+
 
 ```{r}
 
@@ -448,25 +468,47 @@ decision_tree <- function(df, min_samples, max_depth){
   
   #Store decisions and reformat
   decisions = capture.output(decision_tree_algorithm(df = df, min_samples = min_samples, max_depth = max_depth), append = F)
-  decisions_split = as.data.frame(strsplit(decisions, split = " "))
-  decisions_df = decisions_split[-1, ]
-  decisions_df_clean = as.data.frame(sapply(decisions_df, function(x) gsub("\"", "", x)))
-  decisions_df_t = as.data.frame(t(decisions_df_clean))
+  decisions_df = strsplit(decisions, " ")
+  decisions_cl = sapply(decisions_df, function(x) gsub("\"", "", x))
   
-  return(decisions_df_t)
+  #Make list of equal length
+  for(i in 1:length(decisions_cl)){
+  if(length(decisions_cl[[i]]) != 6){
+    if(i == 1){
+      decisions_cl[[i]] = append(decisions_cl[[i]], NA, after = 4)
+    } else {
+      decisions_cl[[i]] = append(decisions_cl[[i]], NA, after = 2)
+    }} else { next(i) }}
+  
+  #Convert to df and reformat again
+  decisions_df = as.data.frame(decisions_cl)
+  decisions_t = as.data.frame(t(decisions_df))
+  decisions_x = decisions_t[, -1]
+  row.names(decisions_x) = 1:nrow(decisions_x)
+  colnames(decisions_x) = c("node", "split.val", "is.child", "split", "depth")
+  
+  #Sort the df
+  decisions_x = decisions_x[order(decisions_x$depth), ]
+  
+  return(decisions_x)
 }
-
-
-d11 = decision_tree(df = salmon_fish, min_samples = 10, max_depth = 10)
-
-decisions = capture.output(decision_tree_algorithm(df = salmon_fish, max_depth = 4, min_samples = 10))
-
-rtree <- list("Length < 3?", "Tuna", list("Weight < 4", "Salmon", list("Length > 6.75", "Tuna", "Salmon")))
 
 ```
 
+The organising function returns output that looks like this
+
+```{r}
+salmon_df = decision_tree(df = salmon_fish, min_samples = 1, max_depth = 2)
+```
+
+```{r echo = F}
+ggdraw() + 
+  draw_image("images/prpd3.png", width = 0.5) + 
+  draw_image("images/scratchd2.png", width = 0.5, x = 0.5)
+```
 
 
+This is just what we got from the recursive function, but re-organised into a data frame format. Once again this is not in the tree format, but a rather a tabular view of each node in the tree. However if we compared our data frame on the right above to a decision tree created using rpart, it is clear that they are essentially the same. 
 
 
 
@@ -561,9 +603,9 @@ decision_tree_algorithm <- function(df,
   
 }
 
-decision_tree_algorithm(df = salmon_fish, min_samples = 10, max_depth = 3)
+decision_tree_algorithm(df = salmon_fish, min_samples = 1, max_depth = 6)
 
-test_tree =  rpart(type ~ weight + length, data = salmon_fish, maxdepth = 3, parms = list(split = "information"))
+test_tree =  rpart(type ~ weight + length, data = salmon_fish, maxdepth = 6, parms = list(split = "information"))
 
 prp(test_tree)
 
