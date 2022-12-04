@@ -1,0 +1,31 @@
+---
+title: "k-nearest neighbors (k-NN)"
+author: "Rcshmin"
+date: '2022-12-04'
+output:
+  rmdformats::downcute:
+    self_contained: yes
+    thumbnails: no
+    lightbox: yes
+    gallery: no
+    highlight: tango
+    toc_depth: 4
+editor_options:
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = TRUE)
+
+```
+
+# Introduction
+
+The **k-nearest neighbors algorithm (k-NN)** is a non-parametric supervised learning method. Non-parametric meaning the algorithm does not make any distributional assumptions about the data, and supervised meaning data with labels is used. 
+
+>"The k-nearest neighbors algorithm (k-NN) was first developed by Evelyn Fix and Joseph Hodges in 1951, and later expanded by Thomas Cover. It is used for classification and regression. In both cases, the input consists of the k closest training examples in a data set. In k-NN classification, the output is a class membership. An object is classified by a plurality vote of its neighbors, with the object being assigned to the class most common among its k nearest neighbors (k is a positive integer, typically small). If k = 1, then the object is simply assigned to the class of that single nearest neighbor.In k-NN regression, the output is the property value for the object. This value is the average of the values of k nearest neighbors  - Wikipedia"
+
+In simple terms, the algorithm is passed a data set with labels, and a new point which is not in the provided data. The algorithm uses the proximity of other points from the data set near the new data point to make predictions about the individual point. This prediction can either be a classification, or a numeric value. Pictures always help, so lets take a look at some!  
+
+## Visual example
