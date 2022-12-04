@@ -136,12 +136,15 @@ determine_best_split <- function(data, potential_splits){
   return(list(best_split_column, best_split_value))
 }
 
-decision_tree_algorithm <- function(df, counter = 0, min_samples, max_depth, tree){
+decision_tree_algorithm <- function(df, 
+                                    counter = 1, 
+                                    min_samples, 
+                                    max_depth, is.child = "root"){
   data = df
   #Check whether stopping conditions have been violated
-  if(any(check_purity(data), nrow(data) < min_samples, counter == max_depth)){
+  if(any(check_purity(data), nrow(data) < min_samples, (counter - 1) == max_depth)){
     classification = classify_data(data)
-    return(print(classification))
+    return(print(paste(classification, is.child, counter)))
   } else {
     #Recursive part
     
@@ -153,12 +156,42 @@ decision_tree_algorithm <- function(df, counter = 0, min_samples, max_depth, tre
     data_g = split_data(data, split_column, split_value)
     data_above = data_g[[1]]
     data_below = data_g[[2]]
-    print(paste("Is", split_column, "<", split_value))
+    print(paste(split_column, split_value, is.child, counter))
     #Find the answers
-    yes_answer = decision_tree_algorithm(df = data_below, counter = counter + 1, min_samples, max_depth)
-    no_answer = decision_tree_algorithm(df = data_above, counter = counter + 1, min_samples, max_depth)
+    yes_answer = decision_tree_algorithm(df = data_below, counter = counter + 1, min_samples, max_depth, is.child = "yes <=")
+    no_answer = decision_tree_algorithm(df = data_above, counter = counter + 1, min_samples, max_depth, is.child = "no >")
+    
   }
+  
 }
 
+decision_tree <- function(df, min_samples, max_depth){
+  
+  #Store decisions and reformat
+  decisions = capture.output(decision_tree_algorithm(df = df, min_samples = min_samples, max_depth = max_depth), append = F)
+  decisions_df = strsplit(decisions, " ")
+  decisions_cl = sapply(decisions_df, function(x) gsub("\"", "", x))
+  
+  #Make list of equal length
+  for(i in 1:length(decisions_cl)){
+    if(length(decisions_cl[[i]]) != 6){
+      if(i == 1){
+        decisions_cl[[i]] = append(decisions_cl[[i]], NA, after = 4)
+      } else {
+        decisions_cl[[i]] = append(decisions_cl[[i]], NA, after = 2)
+      }} else { next(i) }}
+  
+  #Convert to df and reformat again
+  decisions_df = as.data.frame(decisions_cl)
+  decisions_t = as.data.frame(t(decisions_df))
+  decisions_x = decisions_t[, -1]
+  row.names(decisions_x) = 1:nrow(decisions_x)
+  colnames(decisions_x) = c("node", "split.val", "is.child", "split", "depth")
+  
+  #Sort the df
+  decisions_x = decisions_x[order(decisions_x$depth), ]
+  
+  return(decisions_x)
+}
 
 

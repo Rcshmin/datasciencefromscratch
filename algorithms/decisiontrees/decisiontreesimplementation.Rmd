@@ -508,7 +508,34 @@ ggdraw() +
 ```
 
 
-This is just what we got from the recursive function, but re-organised into a data frame format. Once again this is not in the tree format, but a rather a tabular view of each node in the tree. However if we compared our data frame on the right above to a decision tree created using rpart, it is clear that they are essentially the same. 
+This is just what we got from the recursive function, but re-organised into a data frame format. Once again this is not in the tree format, but a rather a tabular view of each node in the tree. However if we compare our data frame on the right above to a decision tree created using rpart, it is clear that they are essentially the same. Ideally I would have wanted to somehow take the data frame that is returned from the organising function, and somehow printed it out in a tree format in the console. But that is a piece of the puzzle that I am yet to solve for now. 
+
+# Remarks
+
+If it isn't already clear, you might have noticed that this implementations leaves a lot to be desired. For instance, the tree created by the functions I have made are not in a tree format, but rather a rectangular format. Below, I have highlighted some issues or deficiencies in what I have shown above
+
+* Converting data frame tree output into a binary tree that can be printed to the console
+
+* Post pruning; sometimes a split may not necessarily be useful. Removing branches from the tree after building it can greatly increase its comprehensibility
+
+* A classification function. The whole point of the decision tree was to enable the classification of a point that is not in our data set. This function would convert the tree into a series of ifelse statements which can be traversed to classify a point
+
+* Regression. So far, I have completely omitted the discussion of decision tree regression. A decision tree regressor can be used to predict a value
+
+* Option to minimise over different metrics. Gini-impurity, information gain and entropy are all different metrics. Minimising over these metrics does not produce the same tree everytime
+
+* Categorical data. I only made an implementation that works on numerical data. As it turns out splits can also be made over categorical data. 
+
+* An OOP implementation. The more and more I think about it, OOP might be better suited to implementing this algorithm; robustness and efficiency.
+
+One last thing. While I did not make a fully functional or robust solution by any means, this implementation did heighten my knowledge of decision trees. No implementation by a single user is likely to be better than existing libraries. But then again no one attempts to solve this kind of problem with that intention. Understanding and a nice coding challenge. That is where the real value in attempting this problem lies. 
+
+# References
+
+* [SebastianMantey implementation of a decision tree from scratch in python](https://github.com/SebastianMantey/Decision-Tree-from-Scratch)
+* [Bryan Travis Smith OOP implementation of a decision tree in both R and python](https://github.com/bryantravissmith/FromScratch/blob/master/SupervisedLearning/DecisionTrees/Implementing%20Decision%20Trees%20From%20Scratch%20Using%20R.ipynb)
+* [Rivik-math video explaining logic behind a decision tree classifer](https://www.youtube.com/watch?v=dCez6oGZilY)
+* [Normalized nerd series on decision tree classifiers](https://www.youtube.com/watch?v=sgQAhG5Q7iY)
 
 
 
