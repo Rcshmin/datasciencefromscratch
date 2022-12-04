@@ -26,6 +26,73 @@ The **k-nearest neighbors algorithm (k-NN)** is a non-parametric supervised lear
 
 >"The k-nearest neighbors algorithm (k-NN) was first developed by Evelyn Fix and Joseph Hodges in 1951, and later expanded by Thomas Cover. It is used for classification and regression. In both cases, the input consists of the k closest training examples in a data set. In k-NN classification, the output is a class membership. An object is classified by a plurality vote of its neighbors, with the object being assigned to the class most common among its k nearest neighbors (k is a positive integer, typically small). If k = 1, then the object is simply assigned to the class of that single nearest neighbor.In k-NN regression, the output is the property value for the object. This value is the average of the values of k nearest neighbors  - Wikipedia"
 
-In simple terms, the algorithm is passed a data set with labels, and a new point which is not in the provided data. The algorithm uses the proximity of other points from the data set near the new data point to make predictions about the individual point. This prediction can either be a classification, or a numeric value. Pictures always help, so lets take a look at some!  
+In simple terms, the algorithm is passed a data set with labels, and a new point which is not in the provided data. The algorithm uses the proximity of other points from the data set near the new data point to make predictions about the individual point. This prediction can either be a classification, or a numeric value. Pictures always help, so lets take a look at one!  
 
 ## Visual example
+
+```{r echo = F, out.extra='style="float:right; padding:10px"'}
+knitr::include_graphics("images/knnexample.png")
+```
+
+In the beside image we have two features, namely $X_{1}$ and $X_{2}$. We also have two classes, A and B, which are respectively denoted by yellow and purple points. Our new point which is to be classified or regressed on is red. You might already be guessing how some of the terms such as 'proximity' and 'plurality vote' factor into this algorithm from the image, but I will spell it out for you JIC. So to assign the red point a class we look at its $k$ nearest neighbors. The word neighbor implies nearness. So we look at the points that are closest to the red point. For $k=1$, this is the single closes point, for $k=2$ this is the two closest points, for $k=3$ this is the three closest points and so on. Now, consider the $k=3$ case show in the image. Of the three closest points to the red point, two are purple and one is yellow. If a 'plurality vote' was two occur, one yellow point would vote that the red point should be assigned to class A, whereas two purple points would vote that it should be class B. Clearly, the purple points win, so the red point would be assigned to class B. But this will not always be the case. With $k=6$ it is direct that yellow points outnumber the purple, and hence the 'vote' is won by the yellow points; the red point will be assigned to class A.
+
+## An interesting case
+
+There is always the chance that there will be an **equal amount of the 'highest vote number'** for some $k$. This means when the vote occurred, there was an equal amount of points belonging to two or more different classes (tied values). There are multiple ways to eliminate this tie.
+
+* *Choose a different* $k$: A tie will likely not exist for all potential values of $k$. So we can change our $k$. Simple enough. But arbitrarily choosing any other $k$ does not ensure that there will be no ties
+
+* *Randomly choose between the tied values*: Just as the name suggests
+
+* *Allow in until natural stop*: This one is a little more nuanced than the others. Choose the smallest number $k$ where $k \geq 2$ such that there exists no ties
+
+# Distance metrics
+
+Since it has been established that the k-NN algorithm uses the notion of proximity, it is important to also quantify how we can measure such
+
+## Euclidean distance
+
+**Euclidean distance** is a perhaps the most common and well known measure of distance in mathematics. As I recall from my golden high school days, it is used just about everywhere; `complex numbers`, `vectors`, `trigonometry`, `calculus` and so on.
+
+> "In mathematics, the Euclidean distance between two points in Euclidean space is the length of a line segment between the two points. It can be calculated from the Cartesian coordinates of the points using the Pythagorean theorem, therefore occasionally being called the Pythagorean distance."
+
+```{r echo = F, out.extra='style="float:right; padding:10px"'}
+knitr::include_graphics("images/euclidis.png")
+```
+
+In two-dimensions the Euclidean distance is simple enough. It follows directly from Pythagoras theorem, and is nothing more than the sum of the squared differences of the $x$ and $y$ coordinates. Suppose we have two points in the Cartesian space $p = (p_{1}, p_{2})$ and $q = (q_{1}, q_{2})$. Then the Euclidean distance is
+
+\begin{align*}
+
+d(p,q) = \sqrt{(q_{1}-p_{1})^2 +(q_{2}-p_{2})^2}
+
+\end{align*}
+
+Some fancy geometric proofs, and pattern observing lands us the $n$ dimensional Euclidean distance, which is not too different from the two dimensional one. Suppose we have two points in a $n$ dimensional space, $p = (p_{1}, p_{2}, ... , p_{n})$ and $q = (q_{1}, q_{2}, ... , q_{n})$ . Then the Euclidean distance is 
+\begin{align*}
+
+d(p,q) = \sqrt{(q_{1}-p_{1})^2 + (q_{2}-p_{2})^2 + (q_{3}-p_{3})^2 + ... + (q_{n}-p_{n})^2}
+
+\end{align*}
+
+This is the metric I will use to establish 'proximity' later due to its simplicity, and appropriateness for the latter notion. But it is important to note that the Euclidean distance does not perform as well in very high dimensions numbers. Enter, **the curse of dimensionality**!. 
+
+> "The curse of dimensionality refers to various phenomena that arise when analyzing and organizing data in high-dimensional spaces that do not occur in low-dimensional settings such as the three-dimensional physical space of everyday experience. The curse of dimensionality in the k-NN context basically means that Euclidean distance is unhelpful in high dimensions because all vectors are almost equidistant to the search query vector"
+
+Just to spice things up, I will throw another distance metric into the bag
+
+## 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
