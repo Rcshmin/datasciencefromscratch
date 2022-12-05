@@ -79,13 +79,114 @@ This is the metric I will use to establish 'proximity' later due to its simplici
 
 > "The curse of dimensionality refers to various phenomena that arise when analyzing and organizing data in high-dimensional spaces that do not occur in low-dimensional settings such as the three-dimensional physical space of everyday experience. The curse of dimensionality in the k-NN context basically means that Euclidean distance is unhelpful in high dimensions because all vectors are almost equidistant to the search query vector"
 
-Just to spice things up, I will throw another distance metric into the bag
-
-## 
+Just to spice things up, I will throw another distance metric into the bag, but lets first encode the euclidean distance metric
 
 
+```{r}
+get_euclid <- function(p, q){
+  #Check for same length
+  if(length(p) != length(q)) return("Error, unequal length!")
+  #Calculate distance
+  distance = sqrt(sum((q-p)^2))
+  return(distance)
+}
+```
 
+## Chebyshev's distance
 
+# Data format 
+
+There are two different data formats which we consider. In the case of classification, the input data should take the format
+
+\begin{bmatrix}
+  X_{1} & X_{2} & X_{3} & X_{4} & \dots & X_{n} & Y
+\end{bmatrix}
+
+where $X_{1}, ... , X_{n}$ are the $n$ feature vectors. $Y$ is the vector of the labels. Regression carries the exact same format except $Y$ should now be a continuous variable we want to predict.
+
+# The majority vote helper
+
+The majority vote helper conducts the 'plurality vote' that was described earlier; it takes the $k$ nearest labels and returns the dominataing label. Note that labels is a vector of the $k$-nearest neighbors labels from closest to farthest. The helper will also have a tie-breaking mechanism that was described earlier built into it. When a tie occurs, the function iteratively removes the furthest label from the labels vector until the tie no longer exists. This helper is only useful in the case of classification.
+
+```{r}
+get_majority_vote <- function(labels){
+  #Vote frequencies and max
+  votefreq = as.data.frame(table(labels))
+  votemax = max(votefreq[, 2])
+  voteties = sum(votefreq[, 2] == votemax)
+  #First case for no ties, second for ties
+  if(voteties == 1){
+    return(votefreq[votefreq[, 2] == votemax, ][1,1])
+  } else {
+    #Reduce label length 
+    i = length(labels)
+    while(voteties != 1){
+      i = i - 1
+      labels  = labels[1:i]
+      votefreq = as.data.frame(table(labels))
+      votemax = max(votefreq[, 2])
+      voteties = sum(votefreq[, 2] == votemax)
+    }
+    return(votefreq[votefreq[, 2] == votemax, ][1,1])
+  }
+}
+```
+
+# Main algorithms 
+
+## Classification
+
+The kNN algorithm for classification calculates the distance between the new point and all the other points in the data set. It sorts the distances from the shortest to furthest and then chooses the $k$ smallest distances. The `get_majority_vote()` helper is called on the labels of theses $k$ smallest distances to produce the dominant label which is then returned by the function. As it turns out the regression problem is even easier than that of classification. A majority vote helper is not even required. We simply find the $k$ nearest neighbors, and average the value of the target variable to find the value for the new point. 
+
+```{r}
+knn_classify <- function(df, k, new_point, type){
+  #Check the new point is of same length
+  if(length(new_point) != ncol(df) - 1) return("Error, unequal length!")
+  #Calculate the distances and order them
+  df_euclid = df[, (ncol(df) - 1):ncol(df)] 
+  df_points = as.data.frame(df[, 1:(ncol(df)-1)])
+  for(i in 1:nrow(df_euclid)){
+    df_euclid[i, 1] = get_euclid(p = new_point, 
+                                 q = as.numeric(df_points[i, ]))
+  }
+  df_order = df_euclid[order(df_euclid[,1]), ]
+  #Return the k-closest neighbors
+  df_knn = df_order[1:k, ]
+  labels_k = df_knn[, 2]
+  #The dominating label
+  dom_label = get_majority_vote(labels = labels_k)
+  return(dom_label)
+}
+
+knn_classify(df = iris, new_point = c(7, 3, 4.8, 1.5), k = 5)
+
+```
+
+## Regression
+
+As it turns out the regression problem is even easier than that of classification. A majority vote helper is not even required. We simply find the $k$ nearest neighbors, and average the value of the target variable to find the value for the new point. 
+
+```{r}
+knn_regress <- function(df, k, new_point){
+  #Check the new point is of same length
+  if(length(new_point) != ncol(df) - 1) return("Error, unequal length!")
+  #Calculate the distances and order them
+  df_euclid = df[, (ncol(df) - 1):ncol(df)] 
+  df_points = as.data.frame(df[, 1:(ncol(df)-1)])
+  for(i in 1:nrow(df_euclid)){
+    df_euclid[i, 1] = get_euclid(p = new_point, 
+                                 q = as.numeric(df_points[i, ]))
+  }
+  df_order = df_euclid[order(df_euclid[,1]), ]
+  #Return the k-closest neighbors
+  df_knn = df_order[1:k, ]
+  #The average value
+  regress_val = mean(df_knn[, 2])
+  return(regress_val)
+}
+
+knn_regress(df = iris[,1:3], k = 1, new_point = c(7, 4))
+```
 
 
 
