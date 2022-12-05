@@ -320,6 +320,7 @@ classify_data <- function(data){
   }
   return(classification)
 }
+
 ```
 
 ## Splitting the data

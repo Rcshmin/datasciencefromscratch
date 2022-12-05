@@ -17,6 +17,7 @@ editor_options:
 ```{r setup, include=FALSE}
 
 knitr::opts_chunk$set(echo = TRUE)
+library(caret)
 
 ```
 
@@ -158,8 +159,6 @@ knn_classify <- function(df, k, new_point, type){
   return(dom_label)
 }
 
-knn_classify(df = iris, new_point = c(7, 3, 4.8, 1.5), k = 5)
-
 ```
 
 ## Regression
@@ -187,6 +186,49 @@ knn_regress <- function(df, k, new_point){
 
 knn_regress(df = iris[,1:3], k = 1, new_point = c(7, 4))
 ```
+
+# Evaluating model performance
+
+One way we can evaluate the classifier is by splitting the iris data into a training and testing set. The training set will consist of points that will be used the "new points" in the testing set. We can then compare the classifications outputted by using the algorithm on the testing set versus what the classifications actually are. 
+
+```{r}
+#Train test split
+set.seed(21312)
+dt = sort(sample(nrow(iris), nrow(iris)*.7))
+trainData <- iris[dt,]
+testData <- iris[-dt,]
+
+#Accuracy of k for dif vals on one possible split
+accuracy = c()
+for(j in 1:20){
+for(i in 1:nrow(testData)){
+testData[i, 6] = knn_classify(df = trainData, k = j, new_point = c(as.numeric(testData[i, 1:4])))
+if(testData[i, 6] == testData[i, 5]){
+  testData[i, 7] = TRUE
+} else {
+  testData[i, 7] = FALSE
+}}
+accuracy[j] = length(which(testData[, 7] == TRUE))/nrow(testData)
+}
+accuracy
+
+#Confusion matrix for k = 5
+for(i in 1:nrow(testData)){
+testData[i, 6] = knn_classify(df = trainData, k = j, new_point = c(as.numeric(testData[i, 1:4])))
+if(testData[i, 6] == testData[i, 5]){
+  testData[i, 7] = TRUE
+} else {
+  testData[i, 7] = FALSE
+}}
+table(testData$Species, testData$V6) 
+
+```
+
+For $k=5$ the confusion matrix (mis-classifcation matrix), shows that the model performs quite well. Two virginica species were incorrectly classified as versicolor. One versicolor species was incorrectly classified as virginica. Else all seems well. It is also clear that for many different values of $k$, the model has 100% accuracy. This means that it can correctly classify samples from the training data set by considering the proximity to points in the train data set. A 100% accuracy is not always good. It may indicate that the k-NN model is over fitted to the data, and will not generalise to new data points. This is closely related to the notion of the `bias-variance tradeoff`
+
+
+
+
 
 
 
