@@ -226,7 +226,7 @@ table(testData$Species, testData$V6)
 
 For $k=5$ the confusion matrix (mis-classifcation matrix), shows that the model performs quite well. Two virginica species were incorrectly classified as versicolor. One versicolor species was incorrectly classified as virginica. Else all seems well. It is also clear that for many different values of $k$, the model has 100% accuracy. This means that it can correctly classify samples from the training data set by considering the proximity to points in the train data set. A 100% accuracy is not always good. It may indicate that the k-NN model is over fitted to the data, and will not generalise to new data points. This is closely related to the notion of the `bias-variance tradeoff`
 
-
+> Bias is the inherent error obtained from a model. It is due to our model being "biased" to a particular kind of solution. Bias is inherent to our model of choice. On the other hand, variance captures how much a model changes depending on what training set it is trained on. Underfitting and overfitting are two important terms here. Underfitting is when a model is too simple too accurately capture the relationships between the features and the output variable. An overfitted model is so specific to the data it was trained on, that it is no longer applicable to different datasets. 
 
 
 
