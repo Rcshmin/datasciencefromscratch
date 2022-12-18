@@ -15,10 +15,15 @@ editor_options:
 ---
 
 ```{r setup, include=FALSE}
-
 knitr::opts_chunk$set(echo = TRUE)
-library(caret)
+library(pilot)
+library(showtext)
+library(tidyverse)
+library(GGally)
 
+#Setup fonts
+font_add_google("Montserrat", "montsr")
+showtext_auto()
 ```
 
 # Introduction
@@ -189,6 +194,8 @@ knn_regress(df = iris[,1:3], k = 1, new_point = c(7, 4))
 
 # Evaluating model performance
 
+## Classification performance
+
 One way we can evaluate the classifier is by splitting the iris data into a training and testing set. The training set will consist of points that will be used the "new points" in the testing set. We can then compare the classifications outputted by using the algorithm on the testing set versus what the classifications actually are. 
 
 ```{r}
@@ -214,7 +221,7 @@ accuracy
 
 #Confusion matrix for k = 5
 for(i in 1:nrow(testData)){
-testData[i, 6] = knn_classify(df = trainData, k = j, new_point = c(as.numeric(testData[i, 1:4])))
+testData[i, 6] = knn_classify(df = trainData, k = 20, new_point = c(as.numeric(testData[i, 1:4])))
 if(testData[i, 6] == testData[i, 5]){
   testData[i, 7] = TRUE
 } else {
@@ -224,10 +231,150 @@ table(testData$Species, testData$V6)
 
 ```
 
-For $k=5$ the confusion matrix (mis-classifcation matrix), shows that the model performs quite well. Two virginica species were incorrectly classified as versicolor. One versicolor species was incorrectly classified as virginica. Else all seems well. It is also clear that for many different values of $k$, the model has 100% accuracy. This means that it can correctly classify samples from the training data set by considering the proximity to points in the train data set. A 100% accuracy is not always good. It may indicate that the k-NN model is over fitted to the data, and will not generalise to new data points. This is closely related to the notion of the `bias-variance tradeoff`
+For $k=20$ the confusion matrix (mis-classifcation matrix), shows that the model performs quite well. Two virginica species were incorrectly classified as versicolor. One versicolor species was incorrectly classified as virginica. Else all seems well. It is also clear that for many different values of $k$, the model has 100% accuracy. This means that it can correctly classify samples from the training data set by considering the proximity to points in the train data set. A 100% accuracy is not always good. It may indicate that the k-NN model is over fitted to the data, and will not generalise to new data points. This is closely related to the notion of the `bias-variance tradeoff`. I will not delve into the specifics for now, as this concept deserves its own explanation. 
 
-> Bias is the inherent error obtained from a model. It is due to our model being "biased" to a particular kind of solution. Bias is inherent to our model of choice. On the other hand, variance captures how much a model changes depending on what training set it is trained on. Underfitting and overfitting are two important terms here. Underfitting is when a model is too simple too accurately capture the relationships between the features and the output variable. An overfitted model is so specific to the data it was trained on, that it is no longer applicable to different datasets. 
+Back to the problem at hand. Earlier we saw that there were many values of $k$ which produced an accuracy of 100% on one particular train test split. However if we shuffled the data, or changed the train test split ratio, the model would perform differently for the same value of $k$. Surely, there is a way to find out which $k$ performs the best on average across different train test splits for our data? Enter `k-fold cross validation`. 
 
+```{r}
+#Perform 10 fold cross validation
+k = 10
+z = 40
+set.seed(23131)
+k_fold_data = mutate(iris, my.folds = sample(1:k, size = nrow(iris), replace = TRUE))
+table(k_fold_data$my.folds)
+
+#a = z is no of neighbors, b is which partition to use as test
+k_fold_accuracy = vector("list", z)
+for(a in 1:z){
+  for(b in 1:k){
+    #Split into train and test based off which partition to use
+    k_fold_test = k_fold_data[k_fold_data$my.folds == b, ]
+    k_fold_train = k_fold_data[k_fold_data$my.folds != b, 1:5]
+    
+    #For given a,b check if predicted matches true label
+    for(i in 1:nrow(k_fold_test)){
+      k_fold_test[i, 7] = knn_classify(df = k_fold_train, 
+                                       k = a, 
+                                       new_point = c(as.numeric(k_fold_test[i, 1:4])))
+     if(k_fold_test[i, 5] == k_fold_test[i, 7]){
+       k_fold_test[i, 8] = TRUE
+     } else {
+        k_fold_test[i, 8] = FALSE
+      }
+    }
+    
+    #Fill list with accuracy
+    k_fold_accuracy[[a]][b] = length(which(k_fold_test[, 8] == TRUE))/nrow(k_fold_test)
+    next(b)
+  }
+  next(a)
+}
+
+#Weights of each partition, then multiply to get average
+k_fold_weights = as.numeric(table(k_fold_data$my.folds)/nrow(k_fold_data))
+for(i in 1:length(k_fold_accuracy)){
+  k_fold_accuracy[[i]] = sum(k_fold_accuracy[[i]]*k_fold_weights)
+}
+
+as.numeric(k_fold_accuracy)
+
+```
+
+Average model performance never reaches 100% accuracy for any $k$. As can seen above the highest average accuracy attained by the model is 98%, which occurs for several different $k$ values. Overall, if we said that all $k$'s of a reasonably small magnitude perform similarly, we would not be wrong. 
+
+```{r echo = T}
+#Format data for error
+k_fold_plot = as.data.frame(t(as.data.frame(k_fold_accuracy)))
+row.names(k_fold_plot) = 1:nrow(k_fold_plot)
+k_fold_plot$k = 1:nrow(k_fold_plot)
+colnames(k_fold_plot) = c("Error", "k")
+k_fold_plot$Error = (1 - k_fold_plot$Error)*100 
+
+#Create line plot
+ggplot(data = k_fold_plot, aes(x = k, y = Error)) +
+  geom_line(color = "orange", size = 1.5) +
+    theme_classic() +
+  labs(title = "Cross validated error rate by differing k's", 
+       subtitle = "Which k performs the best on average?") +
+    theme(text=element_text(family="montsr"), 
+        plot.title = element_text(size=32),
+        plot.subtitle = element_text(size=22),
+        axis.title = element_text(size=22),
+        axis.text = element_text(size=16),
+        legend.text = element_text(size=16), 
+        legend.title = element_text(size=22)) +
+  scale_color_pilot()
+```
+
+Perhaps, the reason why $k$ does not appear to significantly affect model performance lies in the structure of the iris data set.
+
+```{r warnings = F, message = F}
+#Pair-wise plot
+ggpairs(data = iris, columns = c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width"),
+  lower = list(continuous = "points", mapping = aes(color = Species)), 
+  upper = list(continuous = "points", mapping = aes(color = Species)), 
+  diag = list(continuous = "barDiag", mapping = aes(color = Species)))
+```
+
+On every pairwise combination of the data, there appears to be significant grouping of the different classes. This shows that the iris data is well suited to the k-NN algorithm. Given that the grouping is quite significant, this confirms the relative indifference of the accuracy of the algorithm to different values of $k$. However, the above plot is only a visualization of pairwise combinations in two dimensions. It would be nice if there were a way to visualize the grouping of classes for all four features of the data. 
+
+```{r echo = T}
+#Format data for plot
+iris_id = iris
+iris_id[, 6] = 1:nrow(iris)
+iris_parallel_plot = iris_id %>%  
+  pivot_longer(cols = c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width"), 
+              names_to = "Feature", values_to = "Feature.Value")
+
+#Make plot
+ggplot(data = iris_parallel_plot, aes(x = Feature, y = Feature.Value, color = Species, group = V6)) +
+  geom_point() + 
+  geom_line() + 
+  scale_x_discrete(limits = c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width")) +
+  theme_classic() +
+  labs(title = "Parallel lines plot of iris", 
+       subtitle = "Is iris well suited for the k-NN classification algorithm?") +
+    theme(text=element_text(family="montsr"), 
+        plot.title = element_text(size=32),
+        plot.subtitle = element_text(size=22),
+        axis.title = element_text(size=22),
+        axis.text = element_text(size=16),
+        legend.text = element_text(size=16), 
+        legend.title = element_text(size=22)) +
+  scale_color_pilot()
+
+```
+
+The above is a visualization of the multivariate data, known as a parallel lines plot. Since we are searching for a reason for good model performance with the k-NN algorithm, we are looking for grouping in the plot. What I mean by grouping, is that different observations (rows) on iris for a given species follow a similar trajectory across all features; i.e. they are nearby to each other. Given grouping holds relatively well, one thing in addition to consider is distinctness of the trajectories for each species. In the above plot, the setosa species has distinct shape. Versicolor and virginica are similar. This could also be seen earlier in the pair plots. 
+
+> In data visualization, an Andrews plot or Andrews curve is a way to visualize structure in high-dimensional data. It is basically a rolled-down, non-integer version of the Kent–Kiviat radar m chart, or a smoothed version of a parallel coordinate plot. It is named after the statistician David F. Andrews.A value $x$ is a high-dimensional datapoint if it is an element of $\mathbb{R}^{d}$. We can represent high-dimensional data with a number for each of their dimensions, $x=\{x_{1},x_{2},\ldots ,x_{d}\}$. To visualize them, the Andrews plot defines a finite Fourier series:$f_{x}(t)={\frac {x_{1}}{\sqrt{2}}}+x_{2}\sin(t)+x_{3}\cos(t)+x_{4}\sin(2t)+x_{5}\cos(2t)+\cdots$
+
+```{r echo = F}
+t=seq(-pi, pi, length.out=100)
+root2 <- sqrt(2)
+as_tibble(iris) %>%
+  mutate(Row=row_number(), .before=1) %>% 
+  uncount(100) %>% 
+  add_column(T=rep(t, times=nrow(iris))) %>% 
+  mutate(Andrews=Sepal.Length/root2 + Sepal.Width*sin(t) + Petal.Length*cos(t) + Petal.Width*sin(2*t)) %>% 
+  ggplot() +
+    geom_line(aes(x=T, y=Andrews, group=Row, colour=Species)) +
+  theme_classic() +
+  labs(title = "Andrews Curve for iris", 
+       subtitle = "Is iris well suited for the k-NN classification algorithm?", 
+       caption = "Code sourced from https://stackoverflow.com/questions/70862871/ggplot2-plotting-andrews-curves") +
+    theme(text=element_text(family="montsr"), 
+        plot.title = element_text(size=32),
+        plot.subtitle = element_text(size=22),
+        axis.title = element_text(size=22),
+        axis.text = element_text(size=16),
+        legend.text = element_text(size=16), 
+        legend.title = element_text(size=22)) +
+  scale_color_pilot()
+  
+```
+
+The Andrews Curves for iris are the smoothed out versions of the parallel lines plot. For iris, they confirm what we saw earlier regarding the grouping of classes. 
 
 
 
