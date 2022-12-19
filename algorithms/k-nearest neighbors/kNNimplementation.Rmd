@@ -98,7 +98,32 @@ get_euclid <- function(p, q){
 }
 ```
 
-## Chebyshev's distance
+## Cosine distance
+
+> Cosine similarity/distance measures the similarity between two vectors of an inner product space. Mathematically, it measures the cosine of the angle between two vectors projected in a multi-dimensional space. Using this distance we get values between 0 and 1, where 0 means the vectors are 100% similar to each other and 1 means they are not similar at all
+
+Cosine distance has the below formula
+
+\begin{align*}
+
+\cos{\theta} = \frac{\overrightarrow{a}\cdot\overrightarrow{b}}{||\overrightarrow{a}|| \times ||\overrightarrow{b}||}
+
+\end{align*}
+
+Those of you familiar with vectors and linear algebra will note that cosine similarity is just a re-arrangement of the dot product formula. The closer the cosine value is to 1, the smaller the angle between the two vectors, and the greater the match between the two vectors. And vice versa. Earlier I mentioned that euclidean distance breaks down in higher dimensions. Since cosine distance looks how closely two points are oriented to each other, it deals with data with a large number of dimensions better (i.e. when the data is sparse)
+
+```{r}
+get_cosine <- function(p, q){
+  #Check for same length
+  if(length(p) != length(q)) return("Error, unequal length!")
+  #Calculate cosine distance
+  cos_dot = sum(p*q)
+  p_mag = sqrt(sum(p^2))
+  q_mag = sqrt(sum(q^2))
+  cos_dis = 1 - cos_dot/(p_mag*q_mag)
+  return(round(cos_dis, digits = 10))
+}
+```
 
 # Data format 
 
@@ -196,6 +221,8 @@ knn_regress(df = iris[,1:3], k = 1, new_point = c(7, 4))
 
 ## Classification performance
 
+### Model validation
+
 One way we can evaluate the classifier is by splitting the iris data into a training and testing set. The training set will consist of points that will be used the "new points" in the testing set. We can then compare the classifications outputted by using the algorithm on the testing set versus what the classifications actually are. 
 
 ```{r}
@@ -287,7 +314,7 @@ Average model performance never reaches 100% accuracy for any $k$. As can seen a
 k_fold_plot = as.data.frame(t(as.data.frame(k_fold_accuracy)))
 row.names(k_fold_plot) = 1:nrow(k_fold_plot)
 k_fold_plot$k = 1:nrow(k_fold_plot)
-colnames(k_fold_plot) = c("Error", "k")
+colnames(k_fold_plot) = c("Error (%)", "k")
 k_fold_plot$Error = (1 - k_fold_plot$Error)*100 
 
 #Create line plot
@@ -305,6 +332,8 @@ ggplot(data = k_fold_plot, aes(x = k, y = Error)) +
         legend.title = element_text(size=22)) +
   scale_color_pilot()
 ```
+
+### Reason for good performance
 
 Perhaps, the reason why $k$ does not appear to significantly affect model performance lies in the structure of the iris data set.
 
@@ -375,6 +404,146 @@ as_tibble(iris) %>%
 ```
 
 The Andrews Curves for iris are the smoothed out versions of the parallel lines plot. For iris, they confirm what we saw earlier regarding the grouping of classes. 
+
+## Regression performance
+
+Our discussion of the performance of k-NN in regression for different values of $k$, will center around the calculation of the cross validated mean squared error (MSE).
+
+> The mean squared error (MSE) of an estiamtor measures the average square of the errors; the average squared difference between the stimated values and the actual value. It is strictly positive, and represents the quality of an estimator. MSE decreases as the error approaches zero
+
+MSE has the following formula; $n$ is the number of observations, $Y_{i}$ is the $i$th observed value of the variable, $\hat{Y}_{i}$ is the $i$th predicted value of the variable
+
+\begin{align*}
+
+\text{MSE} = \frac{1}{n} \sum_{i=1}^{n}{(Y_{i} - \hat{Y_{i}})^2}
+
+\end{align*}
+
+In addition to this, I will also calculate `mean absolute percentage error` (MAPE) and `mean absolute error` (MAE). MAE gives how far on average, each predicted value is from the true value in distance. MAPE is the same as MAE but a percentage
+
+\begin{align*}
+
+\text{MAE} = \frac{1}{n} \sum_{i=1}^{n}{|Y_{i} - \hat{Y_{i}}|}
+
+\end{align*}
+
+\begin{align*}
+
+\text{MAPE} = \frac{1}{n} \sum_{i=1}^{n}{\frac{|Y_{i} - \hat{Y_{i}}|}{Y_{i}}}
+
+\end{align*}
+
+To calculate regression performance, I will use the first three variables of the iris data to estimate the fourth variable
+
+```{r}
+#Perform 10 fold cross validation
+k = 10
+z = 40
+set.seed(23321)
+k_fold_data = mutate(iris, my.folds = sample(1:k, size = nrow(iris), replace = TRUE))
+table(k_fold_data$my.folds)
+
+#a = z is no of neighbors, b is which partition to use as test
+k_fold_accuracy = vector("list", z)
+k_fold_accuracy1 = vector("list", z)
+k_fold_accuracy2 = vector("list", z)
+for(a in 1:z){
+  for(b in 1:k){
+    #Split into train and test based off which partition to use
+    k_fold_test = k_fold_data[k_fold_data$my.folds == b, 1:4]
+    k_fold_train = k_fold_data[k_fold_data$my.folds != b, 1:4]
+    
+    #For given a,b check if predicted matches true label
+    for(i in 1:nrow(k_fold_test)){
+      k_fold_test[i, 5] = knn_regress(df = k_fold_train,
+                                      k = a, 
+                                      new_point = as.numeric(k_fold_test[i, 1:3]))
+      k_fold_test[i, 6] = (k_fold_test[i, 4] - k_fold_test[i, 5])^2
+      k_fold_test[i, 7] = abs(k_fold_test[i, 4] - k_fold_test[i, 5])
+      k_fold_test[i, 8] = abs(k_fold_test[i, 4] - k_fold_test[i, 5])/k_fold_test[i, 4]
+    }
+    #Fill list with accuracy
+    k_fold_accuracy[[a]][b] = (1/nrow(k_fold_test))*sum(k_fold_test[, 6])
+    k_fold_accuracy1[[a]][b] = (1/nrow(k_fold_test))*sum(k_fold_test[, 7])
+    k_fold_accuracy2[[a]][b] = (1/nrow(k_fold_test))*sum(k_fold_test[, 8])
+    next(b)
+  }
+  next(a)
+}
+
+#Weights of each partition, then multiply to get average
+k_fold_weights = as.numeric(table(k_fold_data$my.folds)/nrow(k_fold_data))
+for(i in 1:length(k_fold_accuracy)){
+  k_fold_accuracy[[i]] = sum(k_fold_accuracy[[i]]*k_fold_weights)
+  k_fold_accuracy1[[i]] = sum(k_fold_accuracy1[[i]]*k_fold_weights)
+  k_fold_accuracy2[[i]] = sum(k_fold_accuracy2[[i]]*k_fold_weights)
+}
+
+#Making three line plots
+k_fold_mse = as.data.frame(t(as.data.frame(k_fold_accuracy)))
+row.names(k_fold_mse) = 1:nrow(k_fold_mse)
+colnames(k_fold_mse) = c("MSE")
+k_fold_mse$k = 1:nrow(k_fold_mse)
+
+k_fold_mae = as.data.frame(t(as.data.frame(k_fold_accuracy1)))
+row.names(k_fold_mae) = 1:nrow(k_fold_mae)
+colnames(k_fold_mae) = c("MAE")
+k_fold_mae$k = 1:nrow(k_fold_mae)
+
+k_fold_mape = as.data.frame(t(as.data.frame(k_fold_accuracy2)))
+row.names(k_fold_mape) = 1:nrow(k_fold_mape)
+colnames(k_fold_mape) = c("MAPE")
+k_fold_mape$k = 1:nrow(k_fold_mape)
+k_fold_mape$MAPE = k_fold_mape$MAPE * 100
+
+```
+
+```{r echo = F}
+ggplot(data = k_fold_mse, aes(x = k, y = MSE)) +
+  geom_line(color = "orange", size = 1.5) +
+      theme_classic() +
+  labs(title = "Cross validated MSE by differing k's", 
+       subtitle = "Which k performs the best on average?") +
+    theme(text=element_text(family="montsr"), 
+        plot.title = element_text(size=32),
+        plot.subtitle = element_text(size=22),
+        axis.title = element_text(size=22),
+        axis.text = element_text(size=16),
+        legend.text = element_text(size=16), 
+        legend.title = element_text(size=22)) +
+  scale_color_pilot()
+
+ggplot(data = k_fold_mae, aes(x = k, y = MAE)) +
+  geom_line(color = "lightgreen", size = 1.5) +
+      theme_classic() +
+  labs(title = "Cross validated MAE by differing k's", 
+       subtitle = "Which k performs the best on average?") +
+    theme(text=element_text(family="montsr"), 
+        plot.title = element_text(size=32),
+        plot.subtitle = element_text(size=22),
+        axis.title = element_text(size=22),
+        axis.text = element_text(size=16),
+        legend.text = element_text(size=16), 
+        legend.title = element_text(size=22)) +
+  scale_color_pilot()
+
+ggplot(data = k_fold_mape, aes(x = k, y = MAPE)) +
+  geom_line(color = "darkgreen", size = 1.5) +
+      theme_classic() +
+  labs(title = "Cross validated MAPE by differing k's", 
+       subtitle = "Which k performs the best on average?") +
+    theme(text=element_text(family="montsr"), 
+        plot.title = element_text(size=32),
+        plot.subtitle = element_text(size=22),
+        axis.title = element_text(size=22),
+        axis.text = element_text(size=16),
+        legend.text = element_text(size=16), 
+        legend.title = element_text(size=22)) +
+  scale_color_pilot()
+```
+
+In terms of MSE, it seems that at $k=6$, MSE is the closes to zero. However, in terms of the MAE and MAPE, $k=10$ seems to be the best. This is as for $k=10$ the k-NN regressor is on average 0.14 units away from the true value, or around 19% away. One this is clear though. The k-NN algorithm performs much better in the classfication problem, then regression on the iris data set. 
+
 
 
 
