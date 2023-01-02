@@ -542,9 +542,41 @@ ggplot(data = k_fold_mape, aes(x = k, y = MAPE)) +
   scale_color_pilot()
 ```
 
-In terms of MSE, it seems that at $k=6$, MSE is the closes to zero. However, in terms of the MAE and MAPE, $k=10$ seems to be the best. This is as for $k=10$ the k-NN regressor is on average 0.14 units away from the true value, or around 19% away. One this is clear though. The k-NN algorithm performs much better in the classfication problem, then regression on the iris data set. 
+In terms of MSE, it seems that at $k=6$, MSE is the closes to zero. However, in terms of the MAE and MAPE, $k=10$ seems to be the best. This is as for $k=10$ the k-NN regressor is on average 0.14 units away from the true value, or around 19% away. One thing is clear though. The k-NN algorithm performs much better in the classification problem, then regression on the iris data set.
+
+# Interesting behaviorr
+
+Before I close out this article, there is one interesting behavior of the k-NN algorithm in the regression problem, I want to bring to your attention. Well it not so much an interesting behavior but rather a cool visual attribute of the algorithm. First let us consider the iris data set in which we use the first column to predict the second column. That is, we use sepal length to predict speal width. 
+
+```{r}
+iris_proof = iris
+knn_regress(df = iris_proof[, 1:2], k = 1, new_point = c(5))
 
 
+```
+
+
+
+
+
+# Sources
+
+* [k-NN Wikipedia Article](https://en.wikipedia.org/wiki/K-nearest_neighbors_algorithm#Statistical_setting)
+* [k-NN Article by Antony Cristopher](https://medium.com/swlh/k-nearest-neighbor-ca2593d7a3c4)
+* [k-NN Article by Zulaikha](https://www.edureka.co/blog/knn-algorithm-in-r/#:~:text=KNN%20which%20stand%20for%20K,of%20its%20neighboring%20data%20points.)
+* [k-NN Explainer by IBM](https://www.ibm.com/au-en/topics/knn#:~:text=The%20k%2Dnearest%20neighbors%20algorithm%2C%20also%20known%20as%20KNN%20or,of%20an%20individual%20data%20point.)
+* [Curse of Dimensionality Wikipedia Article](https://en.wikipedia.org/wiki/Curse_of_dimensionality#Machine_learning)
+* [k-NN Tie-breaking Aritcle](https://www.linkedin.com/pulse/breaking-ties-k-nn-classification-nicholas-pylypiw)
+* [Distance Metrics by Shashwat](https://medium.com/geekculture/7-important-distance-metrics-every-data-scientist-should-know-11e1b0b2ebe3)
+* [k-NN Implementation by Phillip Muens](https://philippmuens.com/k-nearest-neighbors-from-scratch)
+* [John Ndungu; k-NN on iris](https://deepnote.com/@ndungu/Implementing-KNN-Algorithm-on-the-Iris-Dataset-e7c16493-500c-4248-be54-9389de603f16)
+*[k-NN on iris](https://www.kaggle.com/code/xvivancos/tutorial-knn-in-the-iris-data-set/report)
+
+
+```{r include = F, eval = F}
+#Note to self
+#Add 2d graph, 3d graph of k-nn regression. Add categorical variables explanation. Add normalisation.
+```
 
 
 
