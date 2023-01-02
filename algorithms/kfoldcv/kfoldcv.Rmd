@@ -1,0 +1,22 @@
+---
+title: "Evaluating model performance and k-fold cross validation"
+author: "Rcshmin"
+date: '2023-01-03'
+output:
+  rmdformats::downcute:
+    self_contained: yes
+    thumbnails: no
+    lightbox: yes
+    gallery: no
+    highlight: tango
+    toc_depth: 4
+  html_document:
+editor_options:
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+
+```
