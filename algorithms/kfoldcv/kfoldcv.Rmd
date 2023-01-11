@@ -18,5 +18,94 @@ editor_options:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 
+```
+
+# What is model validation?
+
+A key term in k-fold cross validation is the last one. As such, I would like to preface my implementation of the algorithm, with a discussion of what **model validation** itself is. The word validation does not have unambiguous meaning. It is the affirmation or recognition of the validity of something. On this basis, it is pretty easy to take a guess at what model validation is. Rather than slapping the definition in right here, lets first take a step back and remind ourselves of what machine learning is, as this will assist us. 
+
+> Machine learning is a branch of artificial intelligence (AI) and computer science which focuses on the use of data and algorithms to imitate the way that humans learn, gradually improving its accuracy. The models that are constructed by machine learning algorithms are then used to provide insight.
+
+So machine learning is all about making predictions and models learning from known data such that they are able to generalise their learning to new data. And these predictions come after various processes including data preparation, model selection, model training and parameter tuning; the umbrella term used for these processes is model development. Model validation then occurs, followed by model implementation
+
+> Model validation is the set of processes and activities intended to verify that models are performing as expected
+
+In this sense, model validation is all about checking whether the model achieve its intended purpose. Just at the name suggests, the model seeks validation. While we now know that k-fold CV is attempting to check whether the model "performs as expected", our understanding of the algorithm has not gotten particularly deep. To remedy that, I will once again digress. 
+
+The realm of machine learning is a wide one indeed. There are many models, utilizing different approaches to attempt to imitate human learning. Broadly speaking, approaches can be divided into three groups
+
+* **Supervised learning**: This approach is characterized by the practice of building mathematical models on a set of data that contain both inputs and the desired output. The data is commonly labelled as being training data. Each data point or row in the training data set contains features (a.k.a covariates) and an associated label. This training data set is also commonly known as the *feature vector*; it can be decomposed into the covariates and the *supervisory signal*. An algorithm is then applied to the training data, which produces an inferred function which maps each data point (covariates or predictors) to some label or value. The ultimate goal is for the algorithm to build a function or model which learns from the training data set, and is then able to classify or regress on unseen data points which it was not trained on. Some algorithms will produce a function which is already best fitted to the training data, for example logistic regression, whereas others, may require hyperparameter tuning, an example being, k-NN.
+* **Unsupervised learning**: In this approach we provide a data set to the algorithm, but omit the labels. An algorithm of this approach then finds structure in the data (grouping and clustering). These algorithms do not respond from 'feedback' as they do not use training data that is labeled or classified. 
+* **Reinforcement learning**: "An area of machine learning concerned with how software agents ought to take actions in an environment so as to maximize some notion of cumulative reward". Straight from Wikipedia.
+
+# Different types of model validation
+
+## Train-test split
+
+```{r echo = F, out.extra='style="float:right; padding:10px"', out.width="65%"}
+knitr::include_graphics("images/train_test.jpg")
+```
+
+Phew, its good that we got that out the way. What the above chunky block of words served to illustrate is that much of machine learning is about a model learning on some data, and then predicting on new examples. Now back to the question of how can we validate/benchmark/test a model? In any context, we would definitely want to test the "generalization performance" of our model before applying it. Well if a model is built using data, then it makes sense that the only way to test it is by using data. But where does that testing data come from? This is where the **train-test split** comes in. Rather than using all of our available data to train our model, we split the data into a training partition, upon which the algorithm learns, and a testing partition which is not trained upon and serves as that "new/unseen" data. These splits can be of any form $X-Y$ where $X$ is the percentage of the data reserved to training the model, and $Y$ is the rest used for testing. 
+
+## K-fold cross validation
+
+```{r echo = F, out.extra='style="float:right; padding:10px"', out.width="65%"}
+knitr::include_graphics("images/k_fold_diagram.png")
+```
+
+K-fold cross validation expands upon the concept of the train-test split. In k-fold cross validation, we first randomly split our data to $k$ partitions. We then use $k-1$ of those partitions to create the training set, with the remaining partition becoming the testing set. This is repeated until each partition has served as the testing set. For example, 10 fold cross validation would split the data into 10 folds; 10% of the data would be used for testing, and 90% would be used for training. Note that, as you increase $k$ the size of the testing partition becomes smaller, while the training partition becomes bigger. I will discuss an extreme case of this, where $k$ is the largest possible size it can be later.
+
+You may be wondering why k-fold cross validation is much better than the single train-test split. There are numerous reasons. 
+
+1. **Use of all data**: A simple reason for sure. In a single test-split, some samples will be used for training, while others are reserved for testing. In k-fold, all of the available will take turns in being used for training and testing. In this regards, k-fold certainly leverages whatever data one may have to a better degree
+2. **Reduced variance of the performance metric**: A notable issue with the single train-test split is that there is a very large number of potential train-test splits. Each of these splits will produce a different value of the performance estimate when the trained model is tested against the testing set. K-fold cross validation will let us average the performance estimate $k$ times across unique train-test splits. This is especially useful as it is possible that one of those splits could be biased, or not represent the data particularly well. Model performance could be too high or too low in that case, but the algorithm would average this out. Overall, we come out, with a more robust estimate of the chosen models performance; and especially its ability to generalize to unseen data.
+3. **Good for limited data**: If data is sparse, a single train-test split will lead to a high variance in the performance metric due to skewed split. Resampling this small data set multiple times with k-fold cross validation will alleviate this issue.
+4. **Large data sets**: With large data sets (think millions, if not billions of rows) training the model and testing it might be too computationally expensive even for a single train-test split. It might be better to take a subset of the whole data, say 100,000 of those rows, and perform k-fold cross validation. 
+5. **Hyper-parameter tuning**: Many machine learning algorithms come with a slight flexibility in their design. They allow the user to a change a value, which changes how the algorithm operates. K-fold cross validation allows the user to check which value for a certain model has the best performance. 
+6. **Model comparison**: If our estimate of the performance metric is now more robust via k-fold cross validation — while a single train-test split is a snapshot — then we are now better able compare the performance of different machine learning models
+
+K-fold cross validation is not without its disadvantages
+
+1. **More computationally expensive**: K-fold cross validation require way more operations to perform, given the additional steps it performs in comparison to a single split. This also makes it longer to perform, as the model needs to be trained $k$ times, and evaluate $k$ times as well. 
+
+# The algorithm
+
+The algorithm for k-fold cross validation is inherently quite easy to implement. I will divide it into two parts. Firstly, each row will be randomly be assigned a partition. Secondly, a function will calculate the average performance based off these partitions. 
+
+```{r}
+
+k_fold_split <- function(k, data){
+  k_data = data
+  #Shuffle the data
+  k_data = k_data[sample(nrow(k_data)), ]
+  row.names(k_data) = 1:nrow(k_data)
+  #Assign partition number
+  if(nrow(data) %% k == 0){
+    #Vector of randomized indices
+    indices = sample(x = sample(1:nrow(k_data)), size = nrow(k_data), replace = FALSE)
+    #Assigning indices
+    k_data$my.folds[indices] = rep(x = c(1:k), rep(nrow(k_data)/k, k))
+  } 
+  else
+  {
+    #If %% != 0, then randomize the remainder, after equally distributing the floor
+    indices = sample(x = sample(1:nrow(k_data)), size = nrow(k_data), replace = FALSE)
+    primary = rep(x = c(1:k), rep(floor(nrow(k_data)/k), k))
+    secondary = sample(x = c(1:k), replace = FALSE, size = nrow(k_data) %% k)
+    total = append(primary, secondary)
+    k_data$my.folds[indices] = total
+  }
+  return(k_data)
+}
 
 ```
+
+
+# Best choice of $k$?
+
+
+
+
+
+
