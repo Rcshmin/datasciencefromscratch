@@ -17,7 +17,8 @@ editor_options:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-
+library(kableExtra)
+library(data.table)
 ```
 
 # What is model validation?
@@ -48,6 +49,33 @@ knitr::include_graphics("images/train_test.jpg")
 
 Phew, its good that we got that out the way. What the above chunky block of words served to illustrate is that much of machine learning is about a model learning on some data, and then predicting on new examples. Now back to the question of how can we validate/benchmark/test a model? In any context, we would definitely want to test the "generalization performance" of our model before applying it. Well if a model is built using data, then it makes sense that the only way to test it is by using data. But where does that testing data come from? This is where the **train-test split** comes in. Rather than using all of our available data to train our model, we split the data into a training partition, upon which the algorithm learns, and a testing partition which is not trained upon and serves as that "new/unseen" data. These splits can be of any form $X-Y$ where $X$ is the percentage of the data reserved to training the model, and $Y$ is the rest used for testing. 
 
+```{r}
+train_test_split <- function(data, test){
+  #Store data
+  t_data = data
+  #Assign amount of samples
+  if(test < 1){
+    sample_test = ceiling(test*nrow(t_data))
+    sample_train = nrow(t_data) - sample_test
+  } else {
+    sample_test = test
+    sample_train = nrow(t_data) - sample_test
+  }
+  #Shuffle data 
+  t_data = t_data[sample(nrow(t_data)), ]
+  row.names(t_data) = 1:nrow(t_data)
+  #Assign partition and indices
+  indices = sample(x = sample(1:nrow(t_data), size = nrow(t_data), replace = FALSE))
+  primary = rep(x = c("train"), sample_train)
+  secondary = rep(x = c("test"), sample_test)
+  total = append(primary, secondary)
+  t_data$my.folds[indices] = total
+  return(t_data)
+}
+
+```
+
+
 ## K-fold cross validation
 
 ```{r echo = F, out.extra='style="float:right; padding:10px"', out.width="65%"}
@@ -71,10 +99,9 @@ K-fold cross validation is not without its disadvantages
 
 # The algorithm
 
-The algorithm for k-fold cross validation is inherently quite easy to implement. I will divide it into two parts. Firstly, each row will be randomly be assigned a partition. Secondly, a function will calculate the average performance based off these partitions. 
+I will break this algorithm into several different functions. The first `k_fold_split()` assigns each sample a partition number such that the most even partition is made.  
 
 ```{r}
-
 k_fold_split <- function(k, data){
   k_data = data
   #Shuffle the data
@@ -101,6 +128,88 @@ k_fold_split <- function(k, data){
 
 ```
 
+```{r}
+iris_split = k_fold_split(k = 10, data = iris)
+kbl(iris_split) %>%
+  kable_paper() %>%
+  row_spec(0, bold = TRUE) %>% 
+  scroll_box(width = "800px", height = "500px")
+  
+```
+
+The function returns the following. Essentially, all we have done is add a column with a partition number assigned. This in itself is only one stage of k-fold cross validation. The next function I will make is an arranging function. Once again it is an intermediary step in the algorithm.
+
+```{r}
+k_fold_arrange <- function(k, data){
+  #Call previous function
+  k_data = k_fold_split(k, data)
+  #Initialize list
+  k_list = vector("list", k)
+  #Fill the list
+  for(i in 1:k){
+    k_list[[i]] = k_data
+    test_indices = which(k_data$my.folds == i)
+    train_indices = which(k_data$my.folds != i)
+    k_list[[i]]$my.folds[test_indices] = "testing"
+    k_list[[i]]$my.folds[train_indices] = "training"
+    next(i)
+  }
+  return(k_list)
+}
+```
+
+The `k_fold_arrange()` function calls the `k_fold_split()` function takes the partition numbers and creates $k$ data sets, with the partition column having two values. The two values will be "training" and "testing". It stores these data sets in a list and return the list. 
+
+```{r}
+iris_arrange = k_fold_arrange(k = 10, data = iris)
+kbl(iris_arrange[[1]]) %>%
+  kable_paper() %>%
+  row_spec(0, bold = TRUE) %>% 
+  scroll_box(width = "800px", height = "500px")
+
+#Test whether each data set has equal samples for testing and training
+equal_test = TRUE
+for(j in 1:10){
+  if(all(table(iris_arrange[[j]]$my.folds)[[1]] == 15, 
+         table(iris_arrange[[j]]$my.folds)[[2]] == 135)){
+    next(i)
+  } else {
+    equal_test = FALSE
+  }
+}
+print(equal_test)
+
+```
+
+As expected each of the 10 data sets has 15 observations for testing and and 135 for training. Finally, we implement the cross validation function. In-built libraries in R typically have the $k$ fold splitting step of the data, the model and the average metric calculating heavily integrated together. Since this is a from scratch implementation, I will not be able to have the same level of integration. As such my cross validation function will not be end to end. It will not be able to provide the final accuracy of a model. If you would like to see an end to end implementation see the `caret` package; the caret package builds a k-fold control, which can then be piped directly into other models in R. Rather my function will just provide the $k$ data sets, in a way that makes it easy to iterate through them and calculate a performance metric for them. 
+
+```{r}
+
+k_fold_cv <- function(k, data){
+  #Call previous function
+  k_data = k_fold_arrange(k, data)
+  #Initialize new list
+  k_list = vector("list", k)
+  for(i in 1:k){
+    dat = k_data[[i]]
+    k_train = subset(dat, dat$my.folds == "training")[, -ncol(dat)]
+    k_test = subset(dat, dat$my.folds == "testing")[, -ncol(dat)]
+    total_list = list(k_train, k_test)
+    k_list[[i]] = total_list
+    next(i)
+  }
+  return(k_list)
+}
+
+```
+
+The above function simply calls the arrange function, and creates a list of $k$ elements. The first element is the instance where the first fold will be used to train. So in the first element of the list, there is another list of two elements. The first element of this list are the training samples and the second are the testing samples. This pattern goes on for all $k$ elements of the list. Look at the below output, which is three folds on iris to get a better idea. 
+
+```{r attr.output='style="max-height: 250px;"'}
+str(k_fold_cv(k = 3, data = iris))
+```
+
+For most users the `k_fold_cv()` this function will be good enough (assuming that anyone will ever use), as once they have the data sets, it is just a matter of training it on each of the $k$ training sets, testing on the corresponding $k$ testings sets, calculating the performance metric, and then averaging it across. Any of the above functions will likely be good enough for an user to carry out cross validation. 
 
 # Best choice of $k$?
 

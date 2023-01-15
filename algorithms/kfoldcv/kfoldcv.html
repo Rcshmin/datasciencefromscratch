@@ -1723,6 +1723,230 @@ Prism.languages.python={comment:{pattern:/(^|[^\\])#.*/,lookbehind:!0},"string-i
 Prism.languages.r={comment:/#.*/,string:{pattern:/(['"])(?:\\.|(?!\1)[^\\\r\n])*\1/,greedy:!0},"percent-operator":{pattern:/%[^%\s]*%/,alias:"operator"},boolean:/\b(?:TRUE|FALSE)\b/,ellipsis:/\.\.(?:\.|\d+)/,number:[/\b(?:NaN|Inf)\b/,/(?:\b0x[\dA-Fa-f]+(?:\.\d*)?|\b\d+\.?\d*|\B\.\d+)(?:[EePp][+-]?\d+)?[iL]?/],keyword:/\b(?:if|else|repeat|while|function|for|in|next|break|NULL|NA|NA_integer_|NA_real_|NA_complex_|NA_character_)\b/,operator:/->?>?|<(?:=|<?-)?|[>=!]=?|::?|&&?|\|\|?|[+*\/^$@~]/,punctuation:/[(){}\[\],;]/};
 !function(e){var n=/[*&][^\s[\]{},]+/,t=/!(?:<[\w\-%#;/?:@&=+$,.!~*'()[\]]+>|(?:[a-zA-Z\d-]*!)?[\w\-%#;/?:@&=+$.~*'()]+)?/,r="(?:"+t.source+"(?:[ \t]+"+n.source+")?|"+n.source+"(?:[ \t]+"+t.source+")?)",a="(?:[^\\s\\x00-\\x08\\x0e-\\x1f!\"#%&'*,\\-:>?@[\\]`{|}\\x7f-\\x84\\x86-\\x9f\\ud800-\\udfff\\ufffe\\uffff]|[?:-]<PLAIN>)(?:[ \t]*(?:(?![#:])<PLAIN>|:<PLAIN>))*".replace(/<PLAIN>/g,function(){return"[^\\s\\x00-\\x08\\x0e-\\x1f,[\\]{}\\x7f-\\x84\\x86-\\x9f\\ud800-\\udfff\\ufffe\\uffff]"}),d="\"(?:[^\"\\\\\r\n]|\\\\.)*\"|'(?:[^'\\\\\r\n]|\\\\.)*'";function o(e,n){n=(n||"").replace(/m/g,"")+"m";var t="([:\\-,[{]\\s*(?:\\s<<prop>>[ \t]+)?)(?:<<value>>)(?=[ \t]*(?:$|,|]|}|\\s*#))".replace(/<<prop>>/g,function(){return r}).replace(/<<value>>/g,function(){return e});return RegExp(t,n)}e.languages.yaml={scalar:{pattern:RegExp("([\\-:]\\s*(?:\\s<<prop>>[ \t]+)?[|>])[ \t]*(?:((?:\r?\n|\r)[ \t]+)[^\r\n]+(?:\\2[^\r\n]+)*)".replace(/<<prop>>/g,function(){return r})),lookbehind:!0,alias:"string"},comment:/#.*/,key:{pattern:RegExp("((?:^|[:\\-,[{\r\n?])[ \t]*(?:<<prop>>[ \t]+)?)<<key>>(?=\\s*:\\s)".replace(/<<prop>>/g,function(){return r}).replace(/<<key>>/g,function(){return"(?:"+a+"|"+d+")"})),lookbehind:!0,greedy:!0,alias:"atrule"},directive:{pattern:/(^[ \t]*)%.+/m,lookbehind:!0,alias:"important"},datetime:{pattern:o("\\d{4}-\\d\\d?-\\d\\d?(?:[tT]|[ \t]+)\\d\\d?:\\d{2}:\\d{2}(?:\\.\\d*)?[ \t]*(?:Z|[-+]\\d\\d?(?::\\d{2})?)?|\\d{4}-\\d{2}-\\d{2}|\\d\\d?:\\d{2}(?::\\d{2}(?:\\.\\d*)?)?"),lookbehind:!0,alias:"number"},boolean:{pattern:o("true|false","i"),lookbehind:!0,alias:"important"},null:{pattern:o("null|~","i"),lookbehind:!0,alias:"important"},string:{pattern:o(d),lookbehind:!0,greedy:!0},number:{pattern:o("[+-]?(?:0x[\\da-f]+|0o[0-7]+|(?:\\d+\\.?\\d*|\\.?\\d+)(?:e[+-]?\\d+)?|\\.inf|\\.nan)","i"),lookbehind:!0},tag:t,important:n,punctuation:/---|[:[\]{}\-,|>?]|\.\.\./},e.languages.yml=e.languages.yaml}(Prism);
 </script>
+        <script>$(document).ready(function(){
+    if (typeof $('[data-toggle="tooltip"]').tooltip === 'function') {
+        $('[data-toggle="tooltip"]').tooltip();
+    }
+    if ($('[data-toggle="popover"]').popover === 'function') {
+        $('[data-toggle="popover"]').popover();
+    }
+});
+</script>
+        <style type="text/css">
+.lightable-minimal {
+border-collapse: separate;
+border-spacing: 16px 1px;
+width: 100%;
+margin-bottom: 10px;
+}
+.lightable-minimal td {
+margin-left: 5px;
+margin-right: 5px;
+}
+.lightable-minimal th {
+margin-left: 5px;
+margin-right: 5px;
+}
+.lightable-minimal thead tr:last-child th {
+border-bottom: 2px solid #00000050;
+empty-cells: hide;
+}
+.lightable-minimal tbody tr:first-child td {
+padding-top: 0.5em;
+}
+.lightable-minimal.lightable-hover tbody tr:hover {
+background-color: #f5f5f5;
+}
+.lightable-minimal.lightable-striped tbody tr:nth-child(even) {
+background-color: #f5f5f5;
+}
+.lightable-classic {
+border-top: 0.16em solid #111111;
+border-bottom: 0.16em solid #111111;
+width: 100%;
+margin-bottom: 10px;
+margin: 10px 5px;
+}
+.lightable-classic tfoot tr td {
+border: 0;
+}
+.lightable-classic tfoot tr:first-child td {
+border-top: 0.14em solid #111111;
+}
+.lightable-classic caption {
+color: #222222;
+}
+.lightable-classic td {
+padding-left: 5px;
+padding-right: 5px;
+color: #222222;
+}
+.lightable-classic th {
+padding-left: 5px;
+padding-right: 5px;
+font-weight: normal;
+color: #222222;
+}
+.lightable-classic thead tr:last-child th {
+border-bottom: 0.10em solid #111111;
+}
+.lightable-classic.lightable-hover tbody tr:hover {
+background-color: #F9EEC1;
+}
+.lightable-classic.lightable-striped tbody tr:nth-child(even) {
+background-color: #f5f5f5;
+}
+.lightable-classic-2 {
+border-top: 3px double #111111;
+border-bottom: 3px double #111111;
+width: 100%;
+margin-bottom: 10px;
+}
+.lightable-classic-2 tfoot tr td {
+border: 0;
+}
+.lightable-classic-2 tfoot tr:first-child td {
+border-top: 3px double #111111;
+}
+.lightable-classic-2 caption {
+color: #222222;
+}
+.lightable-classic-2 td {
+padding-left: 5px;
+padding-right: 5px;
+color: #222222;
+}
+.lightable-classic-2 th {
+padding-left: 5px;
+padding-right: 5px;
+font-weight: normal;
+color: #222222;
+}
+.lightable-classic-2 tbody tr:last-child td {
+border-bottom: 3px double #111111;
+}
+.lightable-classic-2 thead tr:last-child th {
+border-bottom: 1px solid #111111;
+}
+.lightable-classic-2.lightable-hover tbody tr:hover {
+background-color: #F9EEC1;
+}
+.lightable-classic-2.lightable-striped tbody tr:nth-child(even) {
+background-color: #f5f5f5;
+}
+.lightable-material {
+min-width: 100%;
+white-space: nowrap;
+table-layout: fixed;
+font-family: Roboto, sans-serif;
+border: 1px solid #EEE;
+border-collapse: collapse;
+margin-bottom: 10px;
+}
+.lightable-material tfoot tr td {
+border: 0;
+}
+.lightable-material tfoot tr:first-child td {
+border-top: 1px solid #EEE;
+}
+.lightable-material th {
+height: 56px;
+padding-left: 16px;
+padding-right: 16px;
+}
+.lightable-material td {
+height: 52px;
+padding-left: 16px;
+padding-right: 16px;
+border-top: 1px solid #eeeeee;
+}
+.lightable-material.lightable-hover tbody tr:hover {
+background-color: #f5f5f5;
+}
+.lightable-material.lightable-striped tbody tr:nth-child(even) {
+background-color: #f5f5f5;
+}
+.lightable-material.lightable-striped tbody td {
+border: 0;
+}
+.lightable-material.lightable-striped thead tr:last-child th {
+border-bottom: 1px solid #ddd;
+}
+.lightable-material-dark {
+min-width: 100%;
+white-space: nowrap;
+table-layout: fixed;
+font-family: Roboto, sans-serif;
+border: 1px solid #FFFFFF12;
+border-collapse: collapse;
+margin-bottom: 10px;
+background-color: #363640;
+}
+.lightable-material-dark tfoot tr td {
+border: 0;
+}
+.lightable-material-dark tfoot tr:first-child td {
+border-top: 1px solid #FFFFFF12;
+}
+.lightable-material-dark th {
+height: 56px;
+padding-left: 16px;
+padding-right: 16px;
+color: #FFFFFF60;
+}
+.lightable-material-dark td {
+height: 52px;
+padding-left: 16px;
+padding-right: 16px;
+color: #FFFFFF;
+border-top: 1px solid #FFFFFF12;
+}
+.lightable-material-dark.lightable-hover tbody tr:hover {
+background-color: #FFFFFF12;
+}
+.lightable-material-dark.lightable-striped tbody tr:nth-child(even) {
+background-color: #FFFFFF12;
+}
+.lightable-material-dark.lightable-striped tbody td {
+border: 0;
+}
+.lightable-material-dark.lightable-striped thead tr:last-child th {
+border-bottom: 1px solid #FFFFFF12;
+}
+.lightable-paper {
+width: 100%;
+margin-bottom: 10px;
+color: #444;
+}
+.lightable-paper tfoot tr td {
+border: 0;
+}
+.lightable-paper tfoot tr:first-child td {
+border-top: 1px solid #00000020;
+}
+.lightable-paper thead tr:last-child th {
+color: #666;
+vertical-align: bottom;
+border-bottom: 1px solid #00000020;
+line-height: 1.15em;
+padding: 10px 5px;
+}
+.lightable-paper td {
+vertical-align: middle;
+border-bottom: 1px solid #00000010;
+line-height: 1.15em;
+padding: 7px 5px;
+}
+.lightable-paper.lightable-hover tbody tr:hover {
+background-color: #F9EEC1;
+}
+.lightable-paper.lightable-striped tbody tr:nth-child(even) {
+background-color: #00000008;
+}
+.lightable-paper.lightable-striped tbody td {
+border: 0;
+}
+</style>
     
     
     
@@ -1937,6 +2161,28 @@ partition which is not trained upon and serves as that “new/unseen”
 data. These splits can be of any form <span class="math inline">\(X-Y\)</span> where <span class="math inline">\(X\)</span> is the percentage of the data reserved
 to training the model, and <span class="math inline">\(Y\)</span> is the
 rest used for testing.</p>
+<pre class="r"><code>train_test_split &lt;- function(data, test){
+  #Store data
+  t_data = data
+  #Assign amount of samples
+  if(test &lt; 1){
+    sample_test = ceiling(test*nrow(t_data))
+    sample_train = nrow(t_data) - sample_test
+  } else {
+    sample_test = test
+    sample_train = nrow(t_data) - sample_test
+  }
+  #Shuffle data 
+  t_data = t_data[sample(nrow(t_data)), ]
+  row.names(t_data) = 1:nrow(t_data)
+  #Assign partition and indices
+  indices = sample(x = sample(1:nrow(t_data), size = nrow(t_data), replace = FALSE))
+  primary = rep(x = c(&quot;train&quot;), sample_train)
+  secondary = rep(x = c(&quot;test&quot;), sample_test)
+  total = append(primary, secondary)
+  t_data$my.folds[indices] = total
+  return(t_data)
+}</code></pre>
 </div>
 <div id="k-fold-cross-validation" class="section level2">
 <h2>K-fold cross validation</h2>
@@ -2002,10 +2248,6220 @@ longer to perform, as the model needs to be trained <span class="math inline">\(
 </div>
 <div id="the-algorithm" class="section level1">
 <h1>The algorithm</h1>
-<p>The algorithm for k-fold cross validation is inherently quite easy to
-implement. I will divide it into two parts. Firstly, each row will be
-randomly be assigned a partition. Secondly, a function will calculate
-the average performance based off these partitions.</p>
+<p>I will break this algorithm into several different functions. The
+first <code>k_fold_split()</code> assigns each sample a partition number
+such that the most even partition is made.</p>
+<pre class="r"><code>k_fold_split &lt;- function(k, data){
+  k_data = data
+  #Shuffle the data
+  k_data = k_data[sample(nrow(k_data)), ]
+  row.names(k_data) = 1:nrow(k_data)
+  #Assign partition number
+  if(nrow(data) %% k == 0){
+    #Vector of randomized indices
+    indices = sample(x = sample(1:nrow(k_data)), size = nrow(k_data), replace = FALSE)
+    #Assigning indices
+    k_data$my.folds[indices] = rep(x = c(1:k), rep(nrow(k_data)/k, k))
+  } 
+  else
+  {
+    #If %% != 0, then randomize the remainder, after equally distributing the floor
+    indices = sample(x = sample(1:nrow(k_data)), size = nrow(k_data), replace = FALSE)
+    primary = rep(x = c(1:k), rep(floor(nrow(k_data)/k), k))
+    secondary = sample(x = c(1:k), replace = FALSE, size = nrow(k_data) %% k)
+    total = append(primary, secondary)
+    k_data$my.folds[indices] = total
+  }
+  return(k_data)
+}</code></pre>
+<pre class="r"><code>iris_split = k_fold_split(k = 10, data = iris)
+kbl(iris_split) %&gt;%
+  kable_paper() %&gt;%
+  row_spec(0, bold = TRUE) %&gt;% 
+  scroll_box(width = &quot;800px&quot;, height = &quot;500px&quot;)</code></pre>
+<div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:500px; overflow-x: scroll; width:800px; ">
+<table class=" lightable-paper" style="font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:right;font-weight: bold;position: sticky; top:0; background-color: #FFFFFF;">
+Sepal.Length
+</th>
+<th style="text-align:right;font-weight: bold;position: sticky; top:0; background-color: #FFFFFF;">
+Sepal.Width
+</th>
+<th style="text-align:right;font-weight: bold;position: sticky; top:0; background-color: #FFFFFF;">
+Petal.Length
+</th>
+<th style="text-align:right;font-weight: bold;position: sticky; top:0; background-color: #FFFFFF;">
+Petal.Width
+</th>
+<th style="text-align:left;font-weight: bold;position: sticky; top:0; background-color: #FFFFFF;">
+Species
+</th>
+<th style="text-align:right;font-weight: bold;position: sticky; top:0; background-color: #FFFFFF;">
+my.folds
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+6.3
+</td>
+<td style="text-align:right;">
+2.5
+</td>
+<td style="text-align:right;">
+5.0
+</td>
+<td style="text-align:right;">
+1.9
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:right;">
+8
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+7.6
+</td>
+<td style="text-align:right;">
+3.0
+</td>
+<td style="text-align:right;">
+6.6
+</td>
+<td style="text-align:right;">
+2.1
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.6
+</td>
+<td style="text-align:right;">
+3.0
+</td>
+<td style="text-align:right;">
+4.1
+</td>
+<td style="text-align:right;">
+1.3
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:right;">
+8
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.3
+</td>
+<td style="text-align:right;">
+2.8
+</td>
+<td style="text-align:right;">
+5.1
+</td>
+<td style="text-align:right;">
+1.5
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.5
+</td>
+<td style="text-align:right;">
+2.4
+</td>
+<td style="text-align:right;">
+3.7
+</td>
+<td style="text-align:right;">
+1.0
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:right;">
+10
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.5
+</td>
+<td style="text-align:right;">
+3.0
+</td>
+<td style="text-align:right;">
+5.5
+</td>
+<td style="text-align:right;">
+1.8
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.0
+</td>
+<td style="text-align:right;">
+3.5
+</td>
+<td style="text-align:right;">
+1.6
+</td>
+<td style="text-align:right;">
+0.6
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:right;">
+10
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4.6
+</td>
+<td style="text-align:right;">
+3.2
+</td>
+<td style="text-align:right;">
+1.4
+</td>
+<td style="text-align:right;">
+0.2
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:right;">
+10
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.1
+</td>
+<td style="text-align:right;">
+2.8
+</td>
+<td style="text-align:right;">
+4.0
+</td>
+<td style="text-align:right;">
+1.3
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.0
+</td>
+<td style="text-align:right;">
+2.3
+</td>
+<td style="text-align:right;">
+3.3
+</td>
+<td style="text-align:right;">
+1.0
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.0
+</td>
+<td style="text-align:right;">
+3.2
+</td>
+<td style="text-align:right;">
+1.2
+</td>
+<td style="text-align:right;">
+0.2
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:right;">
+5
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.5
+</td>
+<td style="text-align:right;">
+3.0
+</td>
+<td style="text-align:right;">
+5.2
+</td>
+<td style="text-align:right;">
+2.0
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:right;">
+10
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.7
+</td>
+<td style="text-align:right;">
+3.1
+</td>
+<td style="text-align:right;">
+4.4
+</td>
+<td style="text-align:right;">
+1.4
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:right;">
+6
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.1
+</td>
+<td style="text-align:right;">
+3.5
+</td>
+<td style="text-align:right;">
+1.4
+</td>
+<td style="text-align:right;">
+0.3
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:right;">
+9
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.4
+</td>
+<td style="text-align:right;">
+3.2
+</td>
+<td style="text-align:right;">
+5.3
+</td>
+<td style="text-align:right;">
+2.3
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:right;">
+7
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.3
+</td>
+<td style="text-align:right;">
+2.5
+</td>
+<td style="text-align:right;">
+4.9
+</td>
+<td style="text-align:right;">
+1.5
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:right;">
+3
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4.9
+</td>
+<td style="text-align:right;">
+3.1
+</td>
+<td style="text-align:right;">
+1.5
+</td>
+<td style="text-align:right;">
+0.2
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:right;">
+6
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.1
+</td>
+<td style="text-align:right;">
+3.8
+</td>
+<td style="text-align:right;">
+1.6
+</td>
+<td style="text-align:right;">
+0.2
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:right;">
+6
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4.4
+</td>
+<td style="text-align:right;">
+2.9
+</td>
+<td style="text-align:right;">
+1.4
+</td>
+<td style="text-align:right;">
+0.2
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:right;">
+3
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4.8
+</td>
+<td style="text-align:right;">
+3.4
+</td>
+<td style="text-align:right;">
+1.6
+</td>
+<td style="text-align:right;">
+0.2
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:right;">
+4
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.2
+</td>
+<td style="text-align:right;">
+2.8
+</td>
+<td style="text-align:right;">
+4.8
+</td>
+<td style="text-align:right;">
+1.8
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:right;">
+3
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.4
+</td>
+<td style="text-align:right;">
+3.9
+</td>
+<td style="text-align:right;">
+1.7
+</td>
+<td style="text-align:right;">
+0.4
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:right;">
+4
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.5
+</td>
+<td style="text-align:right;">
+4.2
+</td>
+<td style="text-align:right;">
+1.4
+</td>
+<td style="text-align:right;">
+0.2
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:right;">
+7
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.8
+</td>
+<td style="text-align:right;">
+3.2
+</td>
+<td style="text-align:right;">
+5.9
+</td>
+<td style="text-align:right;">
+2.3
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:right;">
+10
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.5
+</td>
+<td style="text-align:right;">
+3.0
+</td>
+<td style="text-align:right;">
+5.8
+</td>
+<td style="text-align:right;">
+2.2
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:right;">
+8
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4.5
+</td>
+<td style="text-align:right;">
+2.3
+</td>
+<td style="text-align:right;">
+1.3
+</td>
+<td style="text-align:right;">
+0.3
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:right;">
+5
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.8
+</td>
+<td style="text-align:right;">
+2.7
+</td>
+<td style="text-align:right;">
+4.1
+</td>
+<td style="text-align:right;">
+1.0
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.7
+</td>
+<td style="text-align:right;">
+2.8
+</td>
+<td style="text-align:right;">
+4.5
+</td>
+<td style="text-align:right;">
+1.3
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:right;">
+6
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.4
+</td>
+<td style="text-align:right;">
+2.9
+</td>
+<td style="text-align:right;">
+4.3
+</td>
+<td style="text-align:right;">
+1.3
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:right;">
+9
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+7.1
+</td>
+<td style="text-align:right;">
+3.0
+</td>
+<td style="text-align:right;">
+5.9
+</td>
+<td style="text-align:right;">
+2.1
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:right;">
+4
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.1
+</td>
+<td style="text-align:right;">
+3.7
+</td>
+<td style="text-align:right;">
+1.5
+</td>
+<td style="text-align:right;">
+0.4
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:right;">
+6
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.3
+</td>
+<td style="text-align:right;">
+3.3
+</td>
+<td style="text-align:right;">
+4.7
+</td>
+<td style="text-align:right;">
+1.6
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:right;">
+10
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.3
+</td>
+<td style="text-align:right;">
+3.7
+</td>
+<td style="text-align:right;">
+1.5
+</td>
+<td style="text-align:right;">
+0.2
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.8
+</td>
+<td style="text-align:right;">
+2.8
+</td>
+<td style="text-align:right;">
+5.1
+</td>
+<td style="text-align:right;">
+2.4
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.7
+</td>
+<td style="text-align:right;">
+3.0
+</td>
+<td style="text-align:right;">
+5.0
+</td>
+<td style="text-align:right;">
+1.7
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:right;">
+5
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4.8
+</td>
+<td style="text-align:right;">
+3.0
+</td>
+<td style="text-align:right;">
+1.4
+</td>
+<td style="text-align:right;">
+0.3
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.1
+</td>
+<td style="text-align:right;">
+2.8
+</td>
+<td style="text-align:right;">
+4.7
+</td>
+<td style="text-align:right;">
+1.2
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:right;">
+9
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.1
+</td>
+<td style="text-align:right;">
+3.0
+</td>
+<td style="text-align:right;">
+4.6
+</td>
+<td style="text-align:right;">
+1.4
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:right;">
+9
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.7
+</td>
+<td style="text-align:right;">
+4.4
+</td>
+<td style="text-align:right;">
+1.5
+</td>
+<td style="text-align:right;">
+0.4
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:right;">
+5
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.9
+</td>
+<td style="text-align:right;">
+3.1
+</td>
+<td style="text-align:right;">
+5.1
+</td>
+<td style="text-align:right;">
+2.3
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:right;">
+6
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.4
+</td>
+<td style="text-align:right;">
+3.1
+</td>
+<td style="text-align:right;">
+5.5
+</td>
+<td style="text-align:right;">
+1.8
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:right;">
+7
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4.8
+</td>
+<td style="text-align:right;">
+3.1
+</td>
+<td style="text-align:right;">
+1.6
+</td>
+<td style="text-align:right;">
+0.2
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:right;">
+4
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+7.9
+</td>
+<td style="text-align:right;">
+3.8
+</td>
+<td style="text-align:right;">
+6.4
+</td>
+<td style="text-align:right;">
+2.0
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:right;">
+4
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.7
+</td>
+<td style="text-align:right;">
+3.1
+</td>
+<td style="text-align:right;">
+5.6
+</td>
+<td style="text-align:right;">
+2.4
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:right;">
+9
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.0
+</td>
+<td style="text-align:right;">
+2.9
+</td>
+<td style="text-align:right;">
+4.5
+</td>
+<td style="text-align:right;">
+1.5
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:right;">
+7
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4.9
+</td>
+<td style="text-align:right;">
+3.6
+</td>
+<td style="text-align:right;">
+1.4
+</td>
+<td style="text-align:right;">
+0.1
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:right;">
+10
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.2
+</td>
+<td style="text-align:right;">
+3.5
+</td>
+<td style="text-align:right;">
+1.5
+</td>
+<td style="text-align:right;">
+0.2
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:right;">
+9
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.7
+</td>
+<td style="text-align:right;">
+2.9
+</td>
+<td style="text-align:right;">
+4.2
+</td>
+<td style="text-align:right;">
+1.3
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.0
+</td>
+<td style="text-align:right;">
+3.6
+</td>
+<td style="text-align:right;">
+1.4
+</td>
+<td style="text-align:right;">
+0.2
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:right;">
+8
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.8
+</td>
+<td style="text-align:right;">
+2.6
+</td>
+<td style="text-align:right;">
+4.0
+</td>
+<td style="text-align:right;">
+1.2
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:right;">
+5
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4.4
+</td>
+<td style="text-align:right;">
+3.0
+</td>
+<td style="text-align:right;">
+1.3
+</td>
+<td style="text-align:right;">
+0.2
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:right;">
+3
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.0
+</td>
+<td style="text-align:right;">
+3.0
+</td>
+<td style="text-align:right;">
+1.6
+</td>
+<td style="text-align:right;">
+0.2
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:right;">
+4
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.9
+</td>
+<td style="text-align:right;">
+3.0
+</td>
+<td style="text-align:right;">
+4.2
+</td>
+<td style="text-align:right;">
+1.5
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4.9
+</td>
+<td style="text-align:right;">
+3.1
+</td>
+<td style="text-align:right;">
+1.5
+</td>
+<td style="text-align:right;">
+0.1
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:right;">
+4
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.8
+</td>
+<td style="text-align:right;">
+4.0
+</td>
+<td style="text-align:right;">
+1.2
+</td>
+<td style="text-align:right;">
+0.2
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:right;">
+3
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.1
+</td>
+<td style="text-align:right;">
+2.9
+</td>
+<td style="text-align:right;">
+4.7
+</td>
+<td style="text-align:right;">
+1.4
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:right;">
+10
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.9
+</td>
+<td style="text-align:right;">
+3.1
+</td>
+<td style="text-align:right;">
+4.9
+</td>
+<td style="text-align:right;">
+1.5
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:right;">
+9
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+7.2
+</td>
+<td style="text-align:right;">
+3.2
+</td>
+<td style="text-align:right;">
+6.0
+</td>
+<td style="text-align:right;">
+1.8
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:right;">
+5
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.7
+</td>
+<td style="text-align:right;">
+3.0
+</td>
+<td style="text-align:right;">
+5.2
+</td>
+<td style="text-align:right;">
+2.3
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:right;">
+6
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.7
+</td>
+<td style="text-align:right;">
+3.1
+</td>
+<td style="text-align:right;">
+4.7
+</td>
+<td style="text-align:right;">
+1.5
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:right;">
+7
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.4
+</td>
+<td style="text-align:right;">
+3.7
+</td>
+<td style="text-align:right;">
+1.5
+</td>
+<td style="text-align:right;">
+0.2
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:right;">
+3
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.5
+</td>
+<td style="text-align:right;">
+3.5
+</td>
+<td style="text-align:right;">
+1.3
+</td>
+<td style="text-align:right;">
+0.2
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:right;">
+8
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.9
+</td>
+<td style="text-align:right;">
+3.1
+</td>
+<td style="text-align:right;">
+5.4
+</td>
+<td style="text-align:right;">
+2.1
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.0
+</td>
+<td style="text-align:right;">
+3.4
+</td>
+<td style="text-align:right;">
+4.5
+</td>
+<td style="text-align:right;">
+1.6
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:right;">
+4
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.1
+</td>
+<td style="text-align:right;">
+3.5
+</td>
+<td style="text-align:right;">
+1.4
+</td>
+<td style="text-align:right;">
+0.2
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:right;">
+7
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.0
+</td>
+<td style="text-align:right;">
+3.4
+</td>
+<td style="text-align:right;">
+1.6
+</td>
+<td style="text-align:right;">
+0.4
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:right;">
+7
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.0
+</td>
+<td style="text-align:right;">
+2.0
+</td>
+<td style="text-align:right;">
+3.5
+</td>
+<td style="text-align:right;">
+1.0
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:right;">
+7
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+7.7
+</td>
+<td style="text-align:right;">
+2.8
+</td>
+<td style="text-align:right;">
+6.7
+</td>
+<td style="text-align:right;">
+2.0
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:right;">
+5
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.5
+</td>
+<td style="text-align:right;">
+2.8
+</td>
+<td style="text-align:right;">
+4.6
+</td>
+<td style="text-align:right;">
+1.5
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:right;">
+9
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.5
+</td>
+<td style="text-align:right;">
+2.5
+</td>
+<td style="text-align:right;">
+4.0
+</td>
+<td style="text-align:right;">
+1.3
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:right;">
+3
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.1
+</td>
+<td style="text-align:right;">
+3.0
+</td>
+<td style="text-align:right;">
+4.9
+</td>
+<td style="text-align:right;">
+1.8
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:right;">
+3
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.0
+</td>
+<td style="text-align:right;">
+2.7
+</td>
+<td style="text-align:right;">
+5.1
+</td>
+<td style="text-align:right;">
+1.6
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:right;">
+8
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+7.7
+</td>
+<td style="text-align:right;">
+2.6
+</td>
+<td style="text-align:right;">
+6.9
+</td>
+<td style="text-align:right;">
+2.3
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:right;">
+7
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+7.3
+</td>
+<td style="text-align:right;">
+2.9
+</td>
+<td style="text-align:right;">
+6.3
+</td>
+<td style="text-align:right;">
+1.8
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:right;">
+6
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4.4
+</td>
+<td style="text-align:right;">
+3.2
+</td>
+<td style="text-align:right;">
+1.3
+</td>
+<td style="text-align:right;">
+0.2
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.1
+</td>
+<td style="text-align:right;">
+2.5
+</td>
+<td style="text-align:right;">
+3.0
+</td>
+<td style="text-align:right;">
+1.1
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:right;">
+10
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.8
+</td>
+<td style="text-align:right;">
+3.0
+</td>
+<td style="text-align:right;">
+5.5
+</td>
+<td style="text-align:right;">
+2.1
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:right;">
+4
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.7
+</td>
+<td style="text-align:right;">
+2.5
+</td>
+<td style="text-align:right;">
+5.8
+</td>
+<td style="text-align:right;">
+1.8
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:right;">
+8
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.5
+</td>
+<td style="text-align:right;">
+2.4
+</td>
+<td style="text-align:right;">
+3.8
+</td>
+<td style="text-align:right;">
+1.1
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.5
+</td>
+<td style="text-align:right;">
+2.3
+</td>
+<td style="text-align:right;">
+4.0
+</td>
+<td style="text-align:right;">
+1.3
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4.9
+</td>
+<td style="text-align:right;">
+2.5
+</td>
+<td style="text-align:right;">
+4.5
+</td>
+<td style="text-align:right;">
+1.7
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:right;">
+6
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+7.2
+</td>
+<td style="text-align:right;">
+3.6
+</td>
+<td style="text-align:right;">
+6.1
+</td>
+<td style="text-align:right;">
+2.5
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:right;">
+8
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.7
+</td>
+<td style="text-align:right;">
+2.6
+</td>
+<td style="text-align:right;">
+3.5
+</td>
+<td style="text-align:right;">
+1.0
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.8
+</td>
+<td style="text-align:right;">
+2.7
+</td>
+<td style="text-align:right;">
+3.9
+</td>
+<td style="text-align:right;">
+1.2
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.3
+</td>
+<td style="text-align:right;">
+3.3
+</td>
+<td style="text-align:right;">
+6.0
+</td>
+<td style="text-align:right;">
+2.5
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:right;">
+9
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.7
+</td>
+<td style="text-align:right;">
+3.8
+</td>
+<td style="text-align:right;">
+1.7
+</td>
+<td style="text-align:right;">
+0.3
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.7
+</td>
+<td style="text-align:right;">
+2.8
+</td>
+<td style="text-align:right;">
+4.1
+</td>
+<td style="text-align:right;">
+1.3
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:right;">
+10
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.4
+</td>
+<td style="text-align:right;">
+3.2
+</td>
+<td style="text-align:right;">
+4.5
+</td>
+<td style="text-align:right;">
+1.5
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:right;">
+5
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.6
+</td>
+<td style="text-align:right;">
+2.8
+</td>
+<td style="text-align:right;">
+4.9
+</td>
+<td style="text-align:right;">
+2.0
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:right;">
+10
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.6
+</td>
+<td style="text-align:right;">
+2.5
+</td>
+<td style="text-align:right;">
+3.9
+</td>
+<td style="text-align:right;">
+1.1
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:right;">
+7
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.1
+</td>
+<td style="text-align:right;">
+2.6
+</td>
+<td style="text-align:right;">
+5.6
+</td>
+<td style="text-align:right;">
+1.4
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.2
+</td>
+<td style="text-align:right;">
+2.9
+</td>
+<td style="text-align:right;">
+4.3
+</td>
+<td style="text-align:right;">
+1.3
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:right;">
+3
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.4
+</td>
+<td style="text-align:right;">
+3.0
+</td>
+<td style="text-align:right;">
+4.5
+</td>
+<td style="text-align:right;">
+1.5
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:right;">
+10
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4.6
+</td>
+<td style="text-align:right;">
+3.6
+</td>
+<td style="text-align:right;">
+1.0
+</td>
+<td style="text-align:right;">
+0.2
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:right;">
+4
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.2
+</td>
+<td style="text-align:right;">
+4.1
+</td>
+<td style="text-align:right;">
+1.5
+</td>
+<td style="text-align:right;">
+0.1
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4.6
+</td>
+<td style="text-align:right;">
+3.1
+</td>
+<td style="text-align:right;">
+1.5
+</td>
+<td style="text-align:right;">
+0.2
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:right;">
+9
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.0
+</td>
+<td style="text-align:right;">
+2.2
+</td>
+<td style="text-align:right;">
+5.0
+</td>
+<td style="text-align:right;">
+1.5
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:right;">
+5
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.9
+</td>
+<td style="text-align:right;">
+3.2
+</td>
+<td style="text-align:right;">
+4.8
+</td>
+<td style="text-align:right;">
+1.8
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:right;">
+4
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.9
+</td>
+<td style="text-align:right;">
+3.2
+</td>
+<td style="text-align:right;">
+5.7
+</td>
+<td style="text-align:right;">
+2.3
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:right;">
+4
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.2
+</td>
+<td style="text-align:right;">
+3.4
+</td>
+<td style="text-align:right;">
+1.4
+</td>
+<td style="text-align:right;">
+0.2
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:right;">
+3
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.0
+</td>
+<td style="text-align:right;">
+3.3
+</td>
+<td style="text-align:right;">
+1.4
+</td>
+<td style="text-align:right;">
+0.2
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:right;">
+8
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4.6
+</td>
+<td style="text-align:right;">
+3.4
+</td>
+<td style="text-align:right;">
+1.4
+</td>
+<td style="text-align:right;">
+0.3
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:right;">
+5
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4.3
+</td>
+<td style="text-align:right;">
+3.0
+</td>
+<td style="text-align:right;">
+1.1
+</td>
+<td style="text-align:right;">
+0.1
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:right;">
+9
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.0
+</td>
+<td style="text-align:right;">
+3.0
+</td>
+<td style="text-align:right;">
+4.8
+</td>
+<td style="text-align:right;">
+1.8
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:right;">
+8
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.4
+</td>
+<td style="text-align:right;">
+2.7
+</td>
+<td style="text-align:right;">
+5.3
+</td>
+<td style="text-align:right;">
+1.9
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.8
+</td>
+<td style="text-align:right;">
+2.8
+</td>
+<td style="text-align:right;">
+4.8
+</td>
+<td style="text-align:right;">
+1.4
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.1
+</td>
+<td style="text-align:right;">
+3.3
+</td>
+<td style="text-align:right;">
+1.7
+</td>
+<td style="text-align:right;">
+0.5
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:right;">
+10
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.3
+</td>
+<td style="text-align:right;">
+3.4
+</td>
+<td style="text-align:right;">
+5.6
+</td>
+<td style="text-align:right;">
+2.4
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:right;">
+6
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.4
+</td>
+<td style="text-align:right;">
+2.8
+</td>
+<td style="text-align:right;">
+5.6
+</td>
+<td style="text-align:right;">
+2.1
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.8
+</td>
+<td style="text-align:right;">
+2.7
+</td>
+<td style="text-align:right;">
+5.1
+</td>
+<td style="text-align:right;">
+1.9
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.4
+</td>
+<td style="text-align:right;">
+3.4
+</td>
+<td style="text-align:right;">
+1.5
+</td>
+<td style="text-align:right;">
+0.4
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:right;">
+8
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.7
+</td>
+<td style="text-align:right;">
+3.3
+</td>
+<td style="text-align:right;">
+5.7
+</td>
+<td style="text-align:right;">
+2.1
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:right;">
+7
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.0
+</td>
+<td style="text-align:right;">
+3.5
+</td>
+<td style="text-align:right;">
+1.3
+</td>
+<td style="text-align:right;">
+0.3
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:right;">
+7
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.3
+</td>
+<td style="text-align:right;">
+2.3
+</td>
+<td style="text-align:right;">
+4.4
+</td>
+<td style="text-align:right;">
+1.3
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.1
+</td>
+<td style="text-align:right;">
+3.4
+</td>
+<td style="text-align:right;">
+1.5
+</td>
+<td style="text-align:right;">
+0.2
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.6
+</td>
+<td style="text-align:right;">
+3.0
+</td>
+<td style="text-align:right;">
+4.5
+</td>
+<td style="text-align:right;">
+1.5
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:right;">
+8
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.5
+</td>
+<td style="text-align:right;">
+3.2
+</td>
+<td style="text-align:right;">
+5.1
+</td>
+<td style="text-align:right;">
+2.0
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:right;">
+5
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.1
+</td>
+<td style="text-align:right;">
+3.8
+</td>
+<td style="text-align:right;">
+1.5
+</td>
+<td style="text-align:right;">
+0.3
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:right;">
+6
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+7.2
+</td>
+<td style="text-align:right;">
+3.0
+</td>
+<td style="text-align:right;">
+5.8
+</td>
+<td style="text-align:right;">
+1.6
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:right;">
+9
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.6
+</td>
+<td style="text-align:right;">
+2.7
+</td>
+<td style="text-align:right;">
+4.2
+</td>
+<td style="text-align:right;">
+1.3
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:right;">
+4
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4.9
+</td>
+<td style="text-align:right;">
+2.4
+</td>
+<td style="text-align:right;">
+3.3
+</td>
+<td style="text-align:right;">
+1.0
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:right;">
+3
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4.7
+</td>
+<td style="text-align:right;">
+3.2
+</td>
+<td style="text-align:right;">
+1.6
+</td>
+<td style="text-align:right;">
+0.2
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:right;">
+9
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.4
+</td>
+<td style="text-align:right;">
+2.8
+</td>
+<td style="text-align:right;">
+5.6
+</td>
+<td style="text-align:right;">
+2.2
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:right;">
+8
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.7
+</td>
+<td style="text-align:right;">
+3.0
+</td>
+<td style="text-align:right;">
+4.2
+</td>
+<td style="text-align:right;">
+1.2
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:right;">
+4
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.4
+</td>
+<td style="text-align:right;">
+3.4
+</td>
+<td style="text-align:right;">
+1.7
+</td>
+<td style="text-align:right;">
+0.2
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.7
+</td>
+<td style="text-align:right;">
+2.5
+</td>
+<td style="text-align:right;">
+5.0
+</td>
+<td style="text-align:right;">
+2.0
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.7
+</td>
+<td style="text-align:right;">
+3.3
+</td>
+<td style="text-align:right;">
+5.7
+</td>
+<td style="text-align:right;">
+2.5
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:right;">
+6
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.2
+</td>
+<td style="text-align:right;">
+2.2
+</td>
+<td style="text-align:right;">
+4.5
+</td>
+<td style="text-align:right;">
+1.5
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:right;">
+9
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+7.7
+</td>
+<td style="text-align:right;">
+3.0
+</td>
+<td style="text-align:right;">
+6.1
+</td>
+<td style="text-align:right;">
+2.3
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:right;">
+5
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.0
+</td>
+<td style="text-align:right;">
+3.4
+</td>
+<td style="text-align:right;">
+1.5
+</td>
+<td style="text-align:right;">
+0.2
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:right;">
+6
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.4
+</td>
+<td style="text-align:right;">
+3.9
+</td>
+<td style="text-align:right;">
+1.3
+</td>
+<td style="text-align:right;">
+0.4
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:right;">
+6
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.2
+</td>
+<td style="text-align:right;">
+2.7
+</td>
+<td style="text-align:right;">
+3.9
+</td>
+<td style="text-align:right;">
+1.4
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:right;">
+3
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.9
+</td>
+<td style="text-align:right;">
+3.0
+</td>
+<td style="text-align:right;">
+5.1
+</td>
+<td style="text-align:right;">
+1.8
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:right;">
+3
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.5
+</td>
+<td style="text-align:right;">
+2.6
+</td>
+<td style="text-align:right;">
+4.4
+</td>
+<td style="text-align:right;">
+1.2
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:right;">
+8
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.3
+</td>
+<td style="text-align:right;">
+2.7
+</td>
+<td style="text-align:right;">
+4.9
+</td>
+<td style="text-align:right;">
+1.8
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:right;">
+5
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4.8
+</td>
+<td style="text-align:right;">
+3.4
+</td>
+<td style="text-align:right;">
+1.9
+</td>
+<td style="text-align:right;">
+0.2
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:right;">
+4
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.3
+</td>
+<td style="text-align:right;">
+2.9
+</td>
+<td style="text-align:right;">
+5.6
+</td>
+<td style="text-align:right;">
+1.8
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:right;">
+9
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4.8
+</td>
+<td style="text-align:right;">
+3.0
+</td>
+<td style="text-align:right;">
+1.4
+</td>
+<td style="text-align:right;">
+0.1
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:right;">
+8
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4.7
+</td>
+<td style="text-align:right;">
+3.2
+</td>
+<td style="text-align:right;">
+1.3
+</td>
+<td style="text-align:right;">
+0.2
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:right;">
+6
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.6
+</td>
+<td style="text-align:right;">
+2.9
+</td>
+<td style="text-align:right;">
+4.6
+</td>
+<td style="text-align:right;">
+1.3
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.2
+</td>
+<td style="text-align:right;">
+3.4
+</td>
+<td style="text-align:right;">
+5.4
+</td>
+<td style="text-align:right;">
+2.3
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:right;">
+3
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.6
+</td>
+<td style="text-align:right;">
+2.9
+</td>
+<td style="text-align:right;">
+3.6
+</td>
+<td style="text-align:right;">
+1.3
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:right;">
+10
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4.9
+</td>
+<td style="text-align:right;">
+3.0
+</td>
+<td style="text-align:right;">
+1.4
+</td>
+<td style="text-align:right;">
+0.2
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:right;">
+3
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+7.7
+</td>
+<td style="text-align:right;">
+3.8
+</td>
+<td style="text-align:right;">
+6.7
+</td>
+<td style="text-align:right;">
+2.2
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:right;">
+7
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.6
+</td>
+<td style="text-align:right;">
+3.0
+</td>
+<td style="text-align:right;">
+4.4
+</td>
+<td style="text-align:right;">
+1.4
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:right;">
+10
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+7.0
+</td>
+<td style="text-align:right;">
+3.2
+</td>
+<td style="text-align:right;">
+4.7
+</td>
+<td style="text-align:right;">
+1.4
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.0
+</td>
+<td style="text-align:right;">
+2.2
+</td>
+<td style="text-align:right;">
+4.0
+</td>
+<td style="text-align:right;">
+1.0
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:right;">
+7
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.8
+</td>
+<td style="text-align:right;">
+2.7
+</td>
+<td style="text-align:right;">
+5.1
+</td>
+<td style="text-align:right;">
+1.9
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:right;">
+5
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+7.4
+</td>
+<td style="text-align:right;">
+2.8
+</td>
+<td style="text-align:right;">
+6.1
+</td>
+<td style="text-align:right;">
+1.9
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:right;">
+7
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.1
+</td>
+<td style="text-align:right;">
+3.8
+</td>
+<td style="text-align:right;">
+1.9
+</td>
+<td style="text-align:right;">
+0.4
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:right;">
+5
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The function returns the following. Essentially, all we have done is
+add a column with a partition number assigned. This in itself is only
+one stage of k-fold cross validation. The next function I will make is
+an arranging function. Once again it is an intermediary step in the
+algorithm.</p>
+<pre class="r"><code>k_fold_arrange &lt;- function(k, data){
+  #Call previous function
+  k_data = k_fold_split(k, data)
+  #Initialize list
+  k_list = vector(&quot;list&quot;, k)
+  #Fill the list
+  for(i in 1:k){
+    k_list[[i]] = k_data
+    test_indices = which(k_data$my.folds == i)
+    train_indices = which(k_data$my.folds != i)
+    k_list[[i]]$my.folds[test_indices] = &quot;testing&quot;
+    k_list[[i]]$my.folds[train_indices] = &quot;training&quot;
+    next(i)
+  }
+  return(k_list)
+}</code></pre>
+<p>The <code>k_fold_arrange()</code> function calls the
+<code>k_fold_split()</code> function takes the partition numbers and
+creates <span class="math inline">\(k\)</span> data sets, with the
+partition column having two values. The two values will be “training”
+and “testing”. It stores these data sets in a list and return the
+list.</p>
+<pre class="r"><code>iris_arrange = k_fold_arrange(k = 10, data = iris)
+kbl(iris_arrange[[1]]) %&gt;%
+  kable_paper() %&gt;%
+  row_spec(0, bold = TRUE) %&gt;% 
+  scroll_box(width = &quot;800px&quot;, height = &quot;500px&quot;)</code></pre>
+<div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:500px; overflow-x: scroll; width:800px; ">
+<table class=" lightable-paper" style="font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:right;font-weight: bold;position: sticky; top:0; background-color: #FFFFFF;">
+Sepal.Length
+</th>
+<th style="text-align:right;font-weight: bold;position: sticky; top:0; background-color: #FFFFFF;">
+Sepal.Width
+</th>
+<th style="text-align:right;font-weight: bold;position: sticky; top:0; background-color: #FFFFFF;">
+Petal.Length
+</th>
+<th style="text-align:right;font-weight: bold;position: sticky; top:0; background-color: #FFFFFF;">
+Petal.Width
+</th>
+<th style="text-align:left;font-weight: bold;position: sticky; top:0; background-color: #FFFFFF;">
+Species
+</th>
+<th style="text-align:left;font-weight: bold;position: sticky; top:0; background-color: #FFFFFF;">
+my.folds
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+6.0
+</td>
+<td style="text-align:right;">
+3.4
+</td>
+<td style="text-align:right;">
+4.5
+</td>
+<td style="text-align:right;">
+1.6
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.4
+</td>
+<td style="text-align:right;">
+3.4
+</td>
+<td style="text-align:right;">
+1.7
+</td>
+<td style="text-align:right;">
+0.2
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.3
+</td>
+<td style="text-align:right;">
+2.8
+</td>
+<td style="text-align:right;">
+5.1
+</td>
+<td style="text-align:right;">
+1.5
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+7.2
+</td>
+<td style="text-align:right;">
+3.6
+</td>
+<td style="text-align:right;">
+6.1
+</td>
+<td style="text-align:right;">
+2.5
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+7.7
+</td>
+<td style="text-align:right;">
+3.0
+</td>
+<td style="text-align:right;">
+6.1
+</td>
+<td style="text-align:right;">
+2.3
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.7
+</td>
+<td style="text-align:right;">
+3.8
+</td>
+<td style="text-align:right;">
+1.7
+</td>
+<td style="text-align:right;">
+0.3
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:left;">
+testing
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.3
+</td>
+<td style="text-align:right;">
+3.3
+</td>
+<td style="text-align:right;">
+6.0
+</td>
+<td style="text-align:right;">
+2.5
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:left;">
+testing
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.0
+</td>
+<td style="text-align:right;">
+3.0
+</td>
+<td style="text-align:right;">
+1.6
+</td>
+<td style="text-align:right;">
+0.2
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.7
+</td>
+<td style="text-align:right;">
+3.0
+</td>
+<td style="text-align:right;">
+4.2
+</td>
+<td style="text-align:right;">
+1.2
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.0
+</td>
+<td style="text-align:right;">
+2.7
+</td>
+<td style="text-align:right;">
+5.1
+</td>
+<td style="text-align:right;">
+1.6
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+7.7
+</td>
+<td style="text-align:right;">
+3.8
+</td>
+<td style="text-align:right;">
+6.7
+</td>
+<td style="text-align:right;">
+2.2
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.0
+</td>
+<td style="text-align:right;">
+3.2
+</td>
+<td style="text-align:right;">
+1.2
+</td>
+<td style="text-align:right;">
+0.2
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.8
+</td>
+<td style="text-align:right;">
+3.2
+</td>
+<td style="text-align:right;">
+5.9
+</td>
+<td style="text-align:right;">
+2.3
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.0
+</td>
+<td style="text-align:right;">
+3.3
+</td>
+<td style="text-align:right;">
+1.4
+</td>
+<td style="text-align:right;">
+0.2
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.7
+</td>
+<td style="text-align:right;">
+3.1
+</td>
+<td style="text-align:right;">
+4.4
+</td>
+<td style="text-align:right;">
+1.4
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4.8
+</td>
+<td style="text-align:right;">
+3.0
+</td>
+<td style="text-align:right;">
+1.4
+</td>
+<td style="text-align:right;">
+0.1
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+7.1
+</td>
+<td style="text-align:right;">
+3.0
+</td>
+<td style="text-align:right;">
+5.9
+</td>
+<td style="text-align:right;">
+2.1
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.5
+</td>
+<td style="text-align:right;">
+4.2
+</td>
+<td style="text-align:right;">
+1.4
+</td>
+<td style="text-align:right;">
+0.2
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.0
+</td>
+<td style="text-align:right;">
+3.6
+</td>
+<td style="text-align:right;">
+1.4
+</td>
+<td style="text-align:right;">
+0.2
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.1
+</td>
+<td style="text-align:right;">
+3.5
+</td>
+<td style="text-align:right;">
+1.4
+</td>
+<td style="text-align:right;">
+0.3
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.0
+</td>
+<td style="text-align:right;">
+3.4
+</td>
+<td style="text-align:right;">
+1.5
+</td>
+<td style="text-align:right;">
+0.2
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.3
+</td>
+<td style="text-align:right;">
+2.5
+</td>
+<td style="text-align:right;">
+5.0
+</td>
+<td style="text-align:right;">
+1.9
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.7
+</td>
+<td style="text-align:right;">
+2.5
+</td>
+<td style="text-align:right;">
+5.0
+</td>
+<td style="text-align:right;">
+2.0
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.1
+</td>
+<td style="text-align:right;">
+3.0
+</td>
+<td style="text-align:right;">
+4.9
+</td>
+<td style="text-align:right;">
+1.8
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.1
+</td>
+<td style="text-align:right;">
+2.6
+</td>
+<td style="text-align:right;">
+5.6
+</td>
+<td style="text-align:right;">
+1.4
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.9
+</td>
+<td style="text-align:right;">
+3.0
+</td>
+<td style="text-align:right;">
+4.2
+</td>
+<td style="text-align:right;">
+1.5
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.0
+</td>
+<td style="text-align:right;">
+2.3
+</td>
+<td style="text-align:right;">
+3.3
+</td>
+<td style="text-align:right;">
+1.0
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4.9
+</td>
+<td style="text-align:right;">
+2.4
+</td>
+<td style="text-align:right;">
+3.3
+</td>
+<td style="text-align:right;">
+1.0
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.7
+</td>
+<td style="text-align:right;">
+2.8
+</td>
+<td style="text-align:right;">
+4.5
+</td>
+<td style="text-align:right;">
+1.3
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:left;">
+testing
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.4
+</td>
+<td style="text-align:right;">
+3.7
+</td>
+<td style="text-align:right;">
+1.5
+</td>
+<td style="text-align:right;">
+0.2
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4.7
+</td>
+<td style="text-align:right;">
+3.2
+</td>
+<td style="text-align:right;">
+1.3
+</td>
+<td style="text-align:right;">
+0.2
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.0
+</td>
+<td style="text-align:right;">
+2.0
+</td>
+<td style="text-align:right;">
+3.5
+</td>
+<td style="text-align:right;">
+1.0
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:left;">
+testing
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.6
+</td>
+<td style="text-align:right;">
+2.7
+</td>
+<td style="text-align:right;">
+4.2
+</td>
+<td style="text-align:right;">
+1.3
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4.8
+</td>
+<td style="text-align:right;">
+3.4
+</td>
+<td style="text-align:right;">
+1.6
+</td>
+<td style="text-align:right;">
+0.2
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:left;">
+testing
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.1
+</td>
+<td style="text-align:right;">
+3.7
+</td>
+<td style="text-align:right;">
+1.5
+</td>
+<td style="text-align:right;">
+0.4
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.3
+</td>
+<td style="text-align:right;">
+2.7
+</td>
+<td style="text-align:right;">
+4.9
+</td>
+<td style="text-align:right;">
+1.8
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.8
+</td>
+<td style="text-align:right;">
+2.7
+</td>
+<td style="text-align:right;">
+5.1
+</td>
+<td style="text-align:right;">
+1.9
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.5
+</td>
+<td style="text-align:right;">
+2.4
+</td>
+<td style="text-align:right;">
+3.8
+</td>
+<td style="text-align:right;">
+1.1
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.1
+</td>
+<td style="text-align:right;">
+2.8
+</td>
+<td style="text-align:right;">
+4.0
+</td>
+<td style="text-align:right;">
+1.3
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.4
+</td>
+<td style="text-align:right;">
+2.9
+</td>
+<td style="text-align:right;">
+4.3
+</td>
+<td style="text-align:right;">
+1.3
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4.8
+</td>
+<td style="text-align:right;">
+3.4
+</td>
+<td style="text-align:right;">
+1.9
+</td>
+<td style="text-align:right;">
+0.2
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4.7
+</td>
+<td style="text-align:right;">
+3.2
+</td>
+<td style="text-align:right;">
+1.6
+</td>
+<td style="text-align:right;">
+0.2
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.2
+</td>
+<td style="text-align:right;">
+2.2
+</td>
+<td style="text-align:right;">
+4.5
+</td>
+<td style="text-align:right;">
+1.5
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.1
+</td>
+<td style="text-align:right;">
+3.4
+</td>
+<td style="text-align:right;">
+1.5
+</td>
+<td style="text-align:right;">
+0.2
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.1
+</td>
+<td style="text-align:right;">
+3.8
+</td>
+<td style="text-align:right;">
+1.6
+</td>
+<td style="text-align:right;">
+0.2
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+7.4
+</td>
+<td style="text-align:right;">
+2.8
+</td>
+<td style="text-align:right;">
+6.1
+</td>
+<td style="text-align:right;">
+1.9
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.4
+</td>
+<td style="text-align:right;">
+3.1
+</td>
+<td style="text-align:right;">
+5.5
+</td>
+<td style="text-align:right;">
+1.8
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4.6
+</td>
+<td style="text-align:right;">
+3.4
+</td>
+<td style="text-align:right;">
+1.4
+</td>
+<td style="text-align:right;">
+0.3
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:left;">
+testing
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.5
+</td>
+<td style="text-align:right;">
+3.0
+</td>
+<td style="text-align:right;">
+5.2
+</td>
+<td style="text-align:right;">
+2.0
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.2
+</td>
+<td style="text-align:right;">
+3.5
+</td>
+<td style="text-align:right;">
+1.5
+</td>
+<td style="text-align:right;">
+0.2
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4.3
+</td>
+<td style="text-align:right;">
+3.0
+</td>
+<td style="text-align:right;">
+1.1
+</td>
+<td style="text-align:right;">
+0.1
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.5
+</td>
+<td style="text-align:right;">
+2.4
+</td>
+<td style="text-align:right;">
+3.7
+</td>
+<td style="text-align:right;">
+1.0
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.1
+</td>
+<td style="text-align:right;">
+2.8
+</td>
+<td style="text-align:right;">
+4.7
+</td>
+<td style="text-align:right;">
+1.2
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.6
+</td>
+<td style="text-align:right;">
+2.8
+</td>
+<td style="text-align:right;">
+4.9
+</td>
+<td style="text-align:right;">
+2.0
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.5
+</td>
+<td style="text-align:right;">
+2.8
+</td>
+<td style="text-align:right;">
+4.6
+</td>
+<td style="text-align:right;">
+1.5
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+7.9
+</td>
+<td style="text-align:right;">
+3.8
+</td>
+<td style="text-align:right;">
+6.4
+</td>
+<td style="text-align:right;">
+2.0
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.6
+</td>
+<td style="text-align:right;">
+2.5
+</td>
+<td style="text-align:right;">
+3.9
+</td>
+<td style="text-align:right;">
+1.1
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+7.2
+</td>
+<td style="text-align:right;">
+3.2
+</td>
+<td style="text-align:right;">
+6.0
+</td>
+<td style="text-align:right;">
+1.8
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.0
+</td>
+<td style="text-align:right;">
+2.9
+</td>
+<td style="text-align:right;">
+4.5
+</td>
+<td style="text-align:right;">
+1.5
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.1
+</td>
+<td style="text-align:right;">
+2.9
+</td>
+<td style="text-align:right;">
+4.7
+</td>
+<td style="text-align:right;">
+1.4
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.1
+</td>
+<td style="text-align:right;">
+3.3
+</td>
+<td style="text-align:right;">
+1.7
+</td>
+<td style="text-align:right;">
+0.5
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.6
+</td>
+<td style="text-align:right;">
+3.0
+</td>
+<td style="text-align:right;">
+4.5
+</td>
+<td style="text-align:right;">
+1.5
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.5
+</td>
+<td style="text-align:right;">
+2.5
+</td>
+<td style="text-align:right;">
+4.0
+</td>
+<td style="text-align:right;">
+1.3
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.0
+</td>
+<td style="text-align:right;">
+3.4
+</td>
+<td style="text-align:right;">
+1.6
+</td>
+<td style="text-align:right;">
+0.4
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:left;">
+testing
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.3
+</td>
+<td style="text-align:right;">
+3.7
+</td>
+<td style="text-align:right;">
+1.5
+</td>
+<td style="text-align:right;">
+0.2
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.6
+</td>
+<td style="text-align:right;">
+2.9
+</td>
+<td style="text-align:right;">
+4.6
+</td>
+<td style="text-align:right;">
+1.3
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4.9
+</td>
+<td style="text-align:right;">
+3.6
+</td>
+<td style="text-align:right;">
+1.4
+</td>
+<td style="text-align:right;">
+0.1
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.5
+</td>
+<td style="text-align:right;">
+3.2
+</td>
+<td style="text-align:right;">
+5.1
+</td>
+<td style="text-align:right;">
+2.0
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.2
+</td>
+<td style="text-align:right;">
+2.9
+</td>
+<td style="text-align:right;">
+4.3
+</td>
+<td style="text-align:right;">
+1.3
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.7
+</td>
+<td style="text-align:right;">
+2.8
+</td>
+<td style="text-align:right;">
+4.1
+</td>
+<td style="text-align:right;">
+1.3
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.4
+</td>
+<td style="text-align:right;">
+3.9
+</td>
+<td style="text-align:right;">
+1.3
+</td>
+<td style="text-align:right;">
+0.4
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.4
+</td>
+<td style="text-align:right;">
+3.4
+</td>
+<td style="text-align:right;">
+1.5
+</td>
+<td style="text-align:right;">
+0.4
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:left;">
+testing
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4.6
+</td>
+<td style="text-align:right;">
+3.6
+</td>
+<td style="text-align:right;">
+1.0
+</td>
+<td style="text-align:right;">
+0.2
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:left;">
+testing
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.4
+</td>
+<td style="text-align:right;">
+2.8
+</td>
+<td style="text-align:right;">
+5.6
+</td>
+<td style="text-align:right;">
+2.1
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.2
+</td>
+<td style="text-align:right;">
+2.8
+</td>
+<td style="text-align:right;">
+4.8
+</td>
+<td style="text-align:right;">
+1.8
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.2
+</td>
+<td style="text-align:right;">
+3.4
+</td>
+<td style="text-align:right;">
+5.4
+</td>
+<td style="text-align:right;">
+2.3
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.2
+</td>
+<td style="text-align:right;">
+2.7
+</td>
+<td style="text-align:right;">
+3.9
+</td>
+<td style="text-align:right;">
+1.4
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.0
+</td>
+<td style="text-align:right;">
+3.5
+</td>
+<td style="text-align:right;">
+1.6
+</td>
+<td style="text-align:right;">
+0.6
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+7.2
+</td>
+<td style="text-align:right;">
+3.0
+</td>
+<td style="text-align:right;">
+5.8
+</td>
+<td style="text-align:right;">
+1.6
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4.8
+</td>
+<td style="text-align:right;">
+3.1
+</td>
+<td style="text-align:right;">
+1.6
+</td>
+<td style="text-align:right;">
+0.2
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.5
+</td>
+<td style="text-align:right;">
+3.5
+</td>
+<td style="text-align:right;">
+1.3
+</td>
+<td style="text-align:right;">
+0.2
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.5
+</td>
+<td style="text-align:right;">
+3.0
+</td>
+<td style="text-align:right;">
+5.5
+</td>
+<td style="text-align:right;">
+1.8
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4.4
+</td>
+<td style="text-align:right;">
+3.0
+</td>
+<td style="text-align:right;">
+1.3
+</td>
+<td style="text-align:right;">
+0.2
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.7
+</td>
+<td style="text-align:right;">
+3.3
+</td>
+<td style="text-align:right;">
+5.7
+</td>
+<td style="text-align:right;">
+2.1
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.0
+</td>
+<td style="text-align:right;">
+2.2
+</td>
+<td style="text-align:right;">
+5.0
+</td>
+<td style="text-align:right;">
+1.5
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+7.6
+</td>
+<td style="text-align:right;">
+3.0
+</td>
+<td style="text-align:right;">
+6.6
+</td>
+<td style="text-align:right;">
+2.1
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+7.7
+</td>
+<td style="text-align:right;">
+2.8
+</td>
+<td style="text-align:right;">
+6.7
+</td>
+<td style="text-align:right;">
+2.0
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.5
+</td>
+<td style="text-align:right;">
+2.3
+</td>
+<td style="text-align:right;">
+4.0
+</td>
+<td style="text-align:right;">
+1.3
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:left;">
+testing
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4.9
+</td>
+<td style="text-align:right;">
+3.0
+</td>
+<td style="text-align:right;">
+1.4
+</td>
+<td style="text-align:right;">
+0.2
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.9
+</td>
+<td style="text-align:right;">
+3.2
+</td>
+<td style="text-align:right;">
+4.8
+</td>
+<td style="text-align:right;">
+1.8
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.1
+</td>
+<td style="text-align:right;">
+3.0
+</td>
+<td style="text-align:right;">
+4.6
+</td>
+<td style="text-align:right;">
+1.4
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4.5
+</td>
+<td style="text-align:right;">
+2.3
+</td>
+<td style="text-align:right;">
+1.3
+</td>
+<td style="text-align:right;">
+0.3
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.1
+</td>
+<td style="text-align:right;">
+3.8
+</td>
+<td style="text-align:right;">
+1.5
+</td>
+<td style="text-align:right;">
+0.3
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.1
+</td>
+<td style="text-align:right;">
+3.8
+</td>
+<td style="text-align:right;">
+1.9
+</td>
+<td style="text-align:right;">
+0.4
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.8
+</td>
+<td style="text-align:right;">
+2.6
+</td>
+<td style="text-align:right;">
+4.0
+</td>
+<td style="text-align:right;">
+1.2
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.6
+</td>
+<td style="text-align:right;">
+2.9
+</td>
+<td style="text-align:right;">
+3.6
+</td>
+<td style="text-align:right;">
+1.3
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+7.0
+</td>
+<td style="text-align:right;">
+3.2
+</td>
+<td style="text-align:right;">
+4.7
+</td>
+<td style="text-align:right;">
+1.4
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.8
+</td>
+<td style="text-align:right;">
+2.7
+</td>
+<td style="text-align:right;">
+4.1
+</td>
+<td style="text-align:right;">
+1.0
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.4
+</td>
+<td style="text-align:right;">
+2.8
+</td>
+<td style="text-align:right;">
+5.6
+</td>
+<td style="text-align:right;">
+2.2
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.4
+</td>
+<td style="text-align:right;">
+3.9
+</td>
+<td style="text-align:right;">
+1.7
+</td>
+<td style="text-align:right;">
+0.4
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.5
+</td>
+<td style="text-align:right;">
+3.0
+</td>
+<td style="text-align:right;">
+5.8
+</td>
+<td style="text-align:right;">
+2.2
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.1
+</td>
+<td style="text-align:right;">
+2.5
+</td>
+<td style="text-align:right;">
+3.0
+</td>
+<td style="text-align:right;">
+1.1
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.4
+</td>
+<td style="text-align:right;">
+3.2
+</td>
+<td style="text-align:right;">
+5.3
+</td>
+<td style="text-align:right;">
+2.3
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:left;">
+testing
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.9
+</td>
+<td style="text-align:right;">
+3.1
+</td>
+<td style="text-align:right;">
+5.4
+</td>
+<td style="text-align:right;">
+2.1
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.3
+</td>
+<td style="text-align:right;">
+3.3
+</td>
+<td style="text-align:right;">
+4.7
+</td>
+<td style="text-align:right;">
+1.6
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:left;">
+testing
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.3
+</td>
+<td style="text-align:right;">
+2.3
+</td>
+<td style="text-align:right;">
+4.4
+</td>
+<td style="text-align:right;">
+1.3
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4.9
+</td>
+<td style="text-align:right;">
+3.1
+</td>
+<td style="text-align:right;">
+1.5
+</td>
+<td style="text-align:right;">
+0.1
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.7
+</td>
+<td style="text-align:right;">
+2.9
+</td>
+<td style="text-align:right;">
+4.2
+</td>
+<td style="text-align:right;">
+1.3
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.8
+</td>
+<td style="text-align:right;">
+4.0
+</td>
+<td style="text-align:right;">
+1.2
+</td>
+<td style="text-align:right;">
+0.2
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.7
+</td>
+<td style="text-align:right;">
+2.5
+</td>
+<td style="text-align:right;">
+5.8
+</td>
+<td style="text-align:right;">
+1.8
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.2
+</td>
+<td style="text-align:right;">
+3.4
+</td>
+<td style="text-align:right;">
+1.4
+</td>
+<td style="text-align:right;">
+0.2
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.9
+</td>
+<td style="text-align:right;">
+3.1
+</td>
+<td style="text-align:right;">
+4.9
+</td>
+<td style="text-align:right;">
+1.5
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4.4
+</td>
+<td style="text-align:right;">
+3.2
+</td>
+<td style="text-align:right;">
+1.3
+</td>
+<td style="text-align:right;">
+0.2
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.4
+</td>
+<td style="text-align:right;">
+3.2
+</td>
+<td style="text-align:right;">
+4.5
+</td>
+<td style="text-align:right;">
+1.5
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.7
+</td>
+<td style="text-align:right;">
+4.4
+</td>
+<td style="text-align:right;">
+1.5
+</td>
+<td style="text-align:right;">
+0.4
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.0
+</td>
+<td style="text-align:right;">
+2.2
+</td>
+<td style="text-align:right;">
+4.0
+</td>
+<td style="text-align:right;">
+1.0
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4.6
+</td>
+<td style="text-align:right;">
+3.1
+</td>
+<td style="text-align:right;">
+1.5
+</td>
+<td style="text-align:right;">
+0.2
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.3
+</td>
+<td style="text-align:right;">
+3.4
+</td>
+<td style="text-align:right;">
+5.6
+</td>
+<td style="text-align:right;">
+2.4
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.8
+</td>
+<td style="text-align:right;">
+2.8
+</td>
+<td style="text-align:right;">
+5.1
+</td>
+<td style="text-align:right;">
+2.4
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.6
+</td>
+<td style="text-align:right;">
+3.0
+</td>
+<td style="text-align:right;">
+4.1
+</td>
+<td style="text-align:right;">
+1.3
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4.8
+</td>
+<td style="text-align:right;">
+3.0
+</td>
+<td style="text-align:right;">
+1.4
+</td>
+<td style="text-align:right;">
+0.3
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+7.7
+</td>
+<td style="text-align:right;">
+2.6
+</td>
+<td style="text-align:right;">
+6.9
+</td>
+<td style="text-align:right;">
+2.3
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.7
+</td>
+<td style="text-align:right;">
+3.1
+</td>
+<td style="text-align:right;">
+5.6
+</td>
+<td style="text-align:right;">
+2.4
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.7
+</td>
+<td style="text-align:right;">
+3.3
+</td>
+<td style="text-align:right;">
+5.7
+</td>
+<td style="text-align:right;">
+2.5
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4.9
+</td>
+<td style="text-align:right;">
+3.1
+</td>
+<td style="text-align:right;">
+1.5
+</td>
+<td style="text-align:right;">
+0.2
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.2
+</td>
+<td style="text-align:right;">
+4.1
+</td>
+<td style="text-align:right;">
+1.5
+</td>
+<td style="text-align:right;">
+0.1
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.5
+</td>
+<td style="text-align:right;">
+2.6
+</td>
+<td style="text-align:right;">
+4.4
+</td>
+<td style="text-align:right;">
+1.2
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:left;">
+testing
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.1
+</td>
+<td style="text-align:right;">
+3.5
+</td>
+<td style="text-align:right;">
+1.4
+</td>
+<td style="text-align:right;">
+0.2
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.3
+</td>
+<td style="text-align:right;">
+2.5
+</td>
+<td style="text-align:right;">
+4.9
+</td>
+<td style="text-align:right;">
+1.5
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.9
+</td>
+<td style="text-align:right;">
+3.2
+</td>
+<td style="text-align:right;">
+5.7
+</td>
+<td style="text-align:right;">
+2.3
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.6
+</td>
+<td style="text-align:right;">
+3.0
+</td>
+<td style="text-align:right;">
+4.4
+</td>
+<td style="text-align:right;">
+1.4
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.4
+</td>
+<td style="text-align:right;">
+3.0
+</td>
+<td style="text-align:right;">
+4.5
+</td>
+<td style="text-align:right;">
+1.5
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.9
+</td>
+<td style="text-align:right;">
+3.0
+</td>
+<td style="text-align:right;">
+5.1
+</td>
+<td style="text-align:right;">
+1.8
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.8
+</td>
+<td style="text-align:right;">
+2.7
+</td>
+<td style="text-align:right;">
+5.1
+</td>
+<td style="text-align:right;">
+1.9
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.9
+</td>
+<td style="text-align:right;">
+3.1
+</td>
+<td style="text-align:right;">
+5.1
+</td>
+<td style="text-align:right;">
+2.3
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.0
+</td>
+<td style="text-align:right;">
+3.0
+</td>
+<td style="text-align:right;">
+4.8
+</td>
+<td style="text-align:right;">
+1.8
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.7
+</td>
+<td style="text-align:right;">
+3.0
+</td>
+<td style="text-align:right;">
+5.2
+</td>
+<td style="text-align:right;">
+2.3
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.7
+</td>
+<td style="text-align:right;">
+3.0
+</td>
+<td style="text-align:right;">
+5.0
+</td>
+<td style="text-align:right;">
+1.7
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.7
+</td>
+<td style="text-align:right;">
+2.6
+</td>
+<td style="text-align:right;">
+3.5
+</td>
+<td style="text-align:right;">
+1.0
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+7.3
+</td>
+<td style="text-align:right;">
+2.9
+</td>
+<td style="text-align:right;">
+6.3
+</td>
+<td style="text-align:right;">
+1.8
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4.9
+</td>
+<td style="text-align:right;">
+2.5
+</td>
+<td style="text-align:right;">
+4.5
+</td>
+<td style="text-align:right;">
+1.7
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.8
+</td>
+<td style="text-align:right;">
+2.8
+</td>
+<td style="text-align:right;">
+4.8
+</td>
+<td style="text-align:right;">
+1.4
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.7
+</td>
+<td style="text-align:right;">
+3.1
+</td>
+<td style="text-align:right;">
+4.7
+</td>
+<td style="text-align:right;">
+1.5
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4.4
+</td>
+<td style="text-align:right;">
+2.9
+</td>
+<td style="text-align:right;">
+1.4
+</td>
+<td style="text-align:right;">
+0.2
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:left;">
+testing
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.8
+</td>
+<td style="text-align:right;">
+3.0
+</td>
+<td style="text-align:right;">
+5.5
+</td>
+<td style="text-align:right;">
+2.1
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.4
+</td>
+<td style="text-align:right;">
+2.7
+</td>
+<td style="text-align:right;">
+5.3
+</td>
+<td style="text-align:right;">
+1.9
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6.3
+</td>
+<td style="text-align:right;">
+2.9
+</td>
+<td style="text-align:right;">
+5.6
+</td>
+<td style="text-align:right;">
+1.8
+</td>
+<td style="text-align:left;">
+virginica
+</td>
+<td style="text-align:left;">
+testing
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4.6
+</td>
+<td style="text-align:right;">
+3.2
+</td>
+<td style="text-align:right;">
+1.4
+</td>
+<td style="text-align:right;">
+0.2
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.0
+</td>
+<td style="text-align:right;">
+3.5
+</td>
+<td style="text-align:right;">
+1.3
+</td>
+<td style="text-align:right;">
+0.3
+</td>
+<td style="text-align:left;">
+setosa
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.8
+</td>
+<td style="text-align:right;">
+2.7
+</td>
+<td style="text-align:right;">
+3.9
+</td>
+<td style="text-align:right;">
+1.2
+</td>
+<td style="text-align:left;">
+versicolor
+</td>
+<td style="text-align:left;">
+training
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<pre class="r"><code>#Test whether each data set has equal samples for testing and training
+equal_test = TRUE
+for(j in 1:10){
+  if(all(table(iris_arrange[[j]]$my.folds)[[1]] == 15, 
+         table(iris_arrange[[j]]$my.folds)[[2]] == 135)){
+    next(i)
+  } else {
+    equal_test = FALSE
+  }
+}
+print(equal_test)</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<p>As expected each of the 10 data sets has 15 observations for testing
+and and 135 for training. Finally, we implement the cross validation
+function. In-built libraries in R typically have the <span class="math inline">\(k\)</span> fold splitting step of the data, the
+model and the average metric calculating heavily integrated together.
+Since this is a from scratch implementation, I will not be able to have
+the same level of integration. As such my cross validation function will
+not be end to end. It will not be able to provide the final accuracy of
+a model. If you would like to see an end to end implementation see the
+<code>caret</code> package; the caret package builds a k-fold control,
+which can then be piped directly into other models in R. Rather my
+function will just provide the <span class="math inline">\(k\)</span>
+data sets, in a way that makes it easy to iterate through them and
+calculate a performance metric for them.</p>
+<pre class="r"><code>k_fold_cv &lt;- function(k, data){
+  #Call previous function
+  k_data = k_fold_arrange(k, data)
+  #Initialize new list
+  k_list = vector(&quot;list&quot;, k)
+  for(i in 1:k){
+    dat = k_data[[i]]
+    k_train = subset(dat, dat$my.folds == &quot;training&quot;)[, -ncol(dat)]
+    k_test = subset(dat, dat$my.folds == &quot;testing&quot;)[, -ncol(dat)]
+    total_list = list(k_train, k_test)
+    k_list[[i]] = total_list
+    next(i)
+  }
+  return(k_list)
+}</code></pre>
+<p>The above function simply calls the arrange function, and creates a
+list of <span class="math inline">\(k\)</span> elements. The first
+element is the instance where the first fold will be used to train. So
+in the first element of the list, there is another list of two elements.
+The first element of this list are the training samples and the second
+are the testing samples. This pattern goes on for all <span class="math inline">\(k\)</span> elements of the list. Look at the below
+output, which is three folds on iris to get a better idea.</p>
+<pre class="r"><code>str(k_fold_cv(k = 3, data = iris))</code></pre>
+<pre style="max-height: 250px;"><code>## List of 3
+##  $ :List of 2
+##   ..$ :&#39;data.frame&#39;: 100 obs. of  5 variables:
+##   .. ..$ Sepal.Length: num [1:100] 4.9 5.9 5.6 5.7 6.9 5.8 4.8 5.2 6.6 5.2 ...
+##   .. ..$ Sepal.Width : num [1:100] 3.1 3 3 2.8 3.1 2.8 3.4 3.4 3 3.5 ...
+##   .. ..$ Petal.Length: num [1:100] 1.5 5.1 4.1 4.1 5.1 5.1 1.6 1.4 4.4 1.5 ...
+##   .. ..$ Petal.Width : num [1:100] 0.2 1.8 1.3 1.3 2.3 2.4 0.2 0.2 1.4 0.2 ...
+##   .. ..$ Species     : Factor w/ 3 levels &quot;setosa&quot;,&quot;versicolor&quot;,..: 1 3 2 2 3 3 1 1 2 1 ...
+##   ..$ :&#39;data.frame&#39;: 50 obs. of  5 variables:
+##   .. ..$ Sepal.Length: num [1:50] 5.5 6.3 5.1 5.6 5 7.2 6.2 6.1 4.4 6 ...
+##   .. ..$ Sepal.Width : num [1:50] 4.2 3.3 3.8 3 2 3.6 2.8 2.6 3.2 2.9 ...
+##   .. ..$ Petal.Length: num [1:50] 1.4 6 1.6 4.5 3.5 6.1 4.8 5.6 1.3 4.5 ...
+##   .. ..$ Petal.Width : num [1:50] 0.2 2.5 0.2 1.5 1 2.5 1.8 1.4 0.2 1.5 ...
+##   .. ..$ Species     : Factor w/ 3 levels &quot;setosa&quot;,&quot;versicolor&quot;,..: 1 3 1 2 2 3 3 3 1 2 ...
+##  $ :List of 2
+##   ..$ :&#39;data.frame&#39;: 100 obs. of  5 variables:
+##   .. ..$ Sepal.Length: num [1:100] 5.5 4.9 6.3 5.1 6.9 5.2 6.6 6.9 5 5 ...
+##   .. ..$ Sepal.Width : num [1:100] 4.2 3.1 3.3 3.8 3.1 3.4 3 3.2 3.5 3 ...
+##   .. ..$ Petal.Length: num [1:100] 1.4 1.5 6 1.6 5.1 1.4 4.4 5.7 1.3 1.6 ...
+##   .. ..$ Petal.Width : num [1:100] 0.2 0.2 2.5 0.2 2.3 0.2 1.4 2.3 0.3 0.2 ...
+##   .. ..$ Species     : Factor w/ 3 levels &quot;setosa&quot;,&quot;versicolor&quot;,..: 1 1 3 1 3 1 2 3 1 1 ...
+##   ..$ :&#39;data.frame&#39;: 50 obs. of  5 variables:
+##   .. ..$ Sepal.Length: num [1:50] 5.9 5.6 5.7 5.8 4.8 5.2 4.6 6.1 6.8 6.4 ...
+##   .. ..$ Sepal.Width : num [1:50] 3 3 2.8 2.8 3.4 3.5 3.4 2.8 3.2 3.2 ...
+##   .. ..$ Petal.Length: num [1:50] 5.1 4.1 4.1 5.1 1.6 1.5 1.4 4 5.9 4.5 ...
+##   .. ..$ Petal.Width : num [1:50] 1.8 1.3 1.3 2.4 0.2 0.2 0.3 1.3 2.3 1.5 ...
+##   .. ..$ Species     : Factor w/ 3 levels &quot;setosa&quot;,&quot;versicolor&quot;,..: 3 2 2 3 1 1 1 2 3 2 ...
+##  $ :List of 2
+##   ..$ :&#39;data.frame&#39;: 100 obs. of  5 variables:
+##   .. ..$ Sepal.Length: num [1:100] 5.5 5.9 6.3 5.1 5.6 5.7 5.8 4.8 5.2 4.6 ...
+##   .. ..$ Sepal.Width : num [1:100] 4.2 3 3.3 3.8 3 2.8 2.8 3.4 3.5 3.4 ...
+##   .. ..$ Petal.Length: num [1:100] 1.4 5.1 6 1.6 4.1 4.1 5.1 1.6 1.5 1.4 ...
+##   .. ..$ Petal.Width : num [1:100] 0.2 1.8 2.5 0.2 1.3 1.3 2.4 0.2 0.2 0.3 ...
+##   .. ..$ Species     : Factor w/ 3 levels &quot;setosa&quot;,&quot;versicolor&quot;,..: 1 3 3 1 2 2 3 1 1 1 ...
+##   ..$ :&#39;data.frame&#39;: 50 obs. of  5 variables:
+##   .. ..$ Sepal.Length: num [1:50] 4.9 6.9 5.2 6.6 6.9 5 5 5.8 6.7 6.3 ...
+##   .. ..$ Sepal.Width : num [1:50] 3.1 3.1 3.4 3 3.2 3.5 3 2.7 3.3 2.8 ...
+##   .. ..$ Petal.Length: num [1:50] 1.5 5.1 1.4 4.4 5.7 1.3 1.6 3.9 5.7 5.1 ...
+##   .. ..$ Petal.Width : num [1:50] 0.2 2.3 0.2 1.4 2.3 0.3 0.2 1.2 2.1 1.5 ...
+##   .. ..$ Species     : Factor w/ 3 levels &quot;setosa&quot;,&quot;versicolor&quot;,..: 1 3 1 2 3 1 1 2 3 3 ...</code></pre>
+<p>For most users the <code>k_fold_cv()</code> this function will be
+good enough (assuming that anyone will ever use), as once they have the
+data sets, it is just a matter of training it on each of the <span class="math inline">\(k\)</span> training sets, testing on the
+corresponding <span class="math inline">\(k\)</span> testings sets,
+calculating the performance metric, and then averaging it across. Any of
+the above functions will likely be good enough for an user to carry out
+cross validation.</p>
 </div>
 <div id="best-choice-of-k" class="section level1">
 <h1>Best choice of <span class="math inline">\(k\)</span>?</h1>
