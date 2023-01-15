@@ -19,6 +19,7 @@ editor_options:
 knitr::opts_chunk$set(echo = TRUE)
 library(kableExtra)
 library(data.table)
+library(e1071)
 ```
 
 # What is model validation?
@@ -74,6 +75,21 @@ train_test_split <- function(data, test){
 }
 
 ```
+
+Just for the sake of example, I have shown how you can use the code in conjunction with other packages, to calculate a performance metric.
+
+```{r}
+#Example of using a train test split
+set.seed(23891)
+ttsplit = train_test_split(data = iris, test = 0.1)
+NBclassifier = naiveBayes(Species ~ Sepal.Length + Sepal.Width + Petal.Length + Petal.Width, 
+                          data  = subset(ttsplit, ttsplit$my.folds == "train"))
+ttsplit1 = subset(ttsplit, ttsplit$my.folds == "test")[, -6]
+ttsplit1$prediction = predict(NBclassifier, newdata = ttsplit1, type = "class")
+table(ttsplit1$Species, ttsplit1$prediction)
+```
+
+As can be seen from the confusion matrix, one versicolor was classified as virginica from the naive Bayes classifier.
 
 
 ## K-fold cross validation
@@ -210,6 +226,31 @@ str(k_fold_cv(k = 3, data = iris))
 ```
 
 For most users the `k_fold_cv()` this function will be good enough (assuming that anyone will ever use), as once they have the data sets, it is just a matter of training it on each of the $k$ training sets, testing on the corresponding $k$ testings sets, calculating the performance metric, and then averaging it across. Any of the above functions will likely be good enough for an user to carry out cross validation. 
+
+Once again, I have shown below how you can use the above function to find the k-fold cross validated accuracy for a naive bayes classifier.
+
+```{r}
+set.seed(23813)
+ksplit = k_fold_split(k = 10, data = iris)
+klist = c()
+for(k in 1:10){
+  traink = subset(ksplit, ksplit$my.folds != k)[, -6]
+  testk = subset(ksplit, ksplit$my.folds == k)[, -6]
+  NBclassifier = naiveBayes(Species ~ Sepal.Length + Sepal.Width + 
+                              Petal.Length + Petal.Width, 
+                            data = ksplit)
+  NBpredict = predict(NBclassifier, newdata = testk, type = "class")
+  NBequals = (testk$Species == NBpredict)
+  NBaccuracy = length(which(NBequals == TRUE))/length(NBequals)
+  NBweighted = NBaccuracy*(nrow(testk)/nrow(ksplit))
+  klist[k] = NBweighted
+}
+sum(klist)
+
+```
+
+The average accuracy of the model is 96%. 
+
 
 # Best choice of $k$?
 
