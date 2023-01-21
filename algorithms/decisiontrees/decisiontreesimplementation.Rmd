@@ -85,6 +85,8 @@ If we take all of these splits, or otherwise decisions and organised them, it wo
 
 salmon_tree <- rpart(type ~ length + weight, data = salmon_fish)
 
+rpart(type ~ length + weight, data = salmon_fish, parms = list(split = "information"))
+
 #Create decision tree visualization on example data
 
 prp(salmon_tree, fallen.leaves = FALSE, type=1, extra=1, varlen=0, faclen=0, yesno.yshift=-1, cex = 1.5)
@@ -231,6 +233,24 @@ Information gain serves an extension to the calculation of entropy. It is the di
 
 While we seek to minimize entropy, we alternatively seek to maximize information gain. Or in other words, we seek to find the split with the most information gain.
 
+```{r}
+get_information_gain <- function(parent, l_child, r_child, mode = "entropy"){
+  #Get weights in each child
+  l_child = as.data.frame(l_child)
+  r_child = as.data.frame(r_child)
+  weight_l = nrow(l_child)/nrow(parent)
+  weight_r = nrow(r_child)/nrow(parent)
+  #Choose mode
+  if(mode == "gini"){
+    gain = get_gini_impurity(parent[, ncol(parent)]) - (weight_l*get_gini_impurity(l_child[, ncol(l_child)]) + weight_r*get_gini_impurity(r_child[, ncol(r_child)]))
+  } else {
+    gain = get_entropy(as.character(parent[, ncol(parent)])) - (weight_l*get_entropy(as.character(l_child[, ncol(l_child)])) + weight_r*get_entropy(as.character(r_child[, ncol(r_child)])))
+  }
+}
+
+```
+
+
 # Stopping conditions
 
 Now that we know how to find the best split (the one that reduces the most uncertainty) and that decision trees essentially recursively split the data into regions, it is important to consider the stopping conditions. This is primarily due to the fact that the CART (Classification and Regression Trees) algorithms are greedy. What I mean by them being 'greedy' is that they will keep splitting the data in an effort to reduce entropy unless told otherwise. This produces a 'locally optimal solution' rather than a 'globally optimal solution'; in simpler terms, we could say that a decision tree never reconsiders its choices, and only makes whatever choice seems best at the moment. While we can not necessarily prevent the 'live in the moment' behavior of the decision tree, it is important to stop the decision tree from partitioning our data infinitely. A solution in which we do not restrain the algorithm will be computationally expensive, difficult to interpret and probably be overfitted to the data.
@@ -335,6 +355,8 @@ split_data <- function(data, split_column, split_value){
   data_above = data[split_c > split_value, ]
   return(list(data_above, data_below))
 }
+
+split_data(data = iris, split_column = "Petal.Width", split_value = 0.2)
 ```
 
 ## Potential and best splits
@@ -407,6 +429,36 @@ determine_best_split <- function(data, potential_splits){
 }
 
 ```
+
+```{r}
+determine_best_split <- function(data, potential_splits, mode = "gini"){
+  #Initialize overall entropy and col 
+  running_gain = -Inf
+  best_split_value = 0
+  best_split_column = ""
+  #Find best entropy over potential splits
+  for(j in 1:ncol(potential_splits)){
+    for(i in unique(potential_splits[, j])){
+      mask_val = i 
+      mask_col = j
+      splits = split_data(data = data, split_column = mask_col, split_value = mask_val)
+      relative_gain = get_information_gain(parent = data, r_child = splits[[1]], l_child = splits[[2]], mode = mode)
+      if(relative_gain > running_gain){
+        running_gain = relative_gain
+        best_split_value = mask_val
+        best_split_column = colnames(potential_splits)[j]
+      } else {
+        next(i)
+      }
+    }
+  }
+  return(list(best_split_column, best_split_value))
+}
+
+#might need to come back in future and add as.character() to gini as well
+
+```
+
 
 # The main algorithm
 
