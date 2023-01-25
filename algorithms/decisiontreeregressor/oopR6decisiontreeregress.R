@@ -126,7 +126,11 @@ Tree =
           }
           dat[nrow(dat)+1, ] = data[nrow(data), ]
           dat = dat[, 1:col_n]
-          potential_splits = dat
+          #Ensure one feature split possible
+          potential_splits = as.data.frame(dat)
+          if(ncol(potential_splits) == 1){
+            colnames(potential_splits)[[1]] = colnames(data)[[1]]
+          }
           return(potential_splits)
         },
       determine_best_split =
@@ -235,7 +239,7 @@ Tree =
 
 ##### Testing the OOP Implementation #####
 
-dtree = Tree$new(min_samples = 5, max_depth = 3, df = iris[,c(1,2,3)])
+dtree = Tree$new(min_samples = 5, max_depth = 3, df = iris[,c(1,2)])
 dtree_store = dtree$build_tree()
 dtree_build = dtree$print_tree()
 
@@ -260,6 +264,22 @@ iris1 = iris_train %>%
   filter(Sepal.Width > 3.6)
 
 mean(iris1$Petal.Length)
+
+for(j in 1:1){
+  print(j)
+}
+
+#issue, did not work with one feature predictor; fixed by editing potential splits
+
+iris_chegg = data.frame(matrix(ncol = 5))
+colnames(iris_chegg) = names(iris)
+colnames(iris_chegg)[[1]] = "Sepal.Chilly"
+
+ncol(as.data.frame(get_potential_splits(iris[,c(1,2)])))
+
+iris_chheg = get_potential_splits(iris[,c(1,2,3)])
+
+determine_best_split(data = iris[,c(1,2)], potential_splits = get_potential_splits(iris[,c(1,2)]))
 
 #solved by adding an if statement in method for build tree, might revert it later if issue persists
 
@@ -334,7 +354,10 @@ get_potential_splits =
     }
     dat[nrow(dat)+1, ] = data[nrow(data), ]
     dat = dat[, 1:col_n]
-    potential_splits = dat
+    potential_splits = as.data.frame(dat)
+    if(ncol(potential_splits) == 1){
+      colnames(potential_splits)[[1]] = colnames(data)[[1]]
+    }
     return(potential_splits)
   }
 

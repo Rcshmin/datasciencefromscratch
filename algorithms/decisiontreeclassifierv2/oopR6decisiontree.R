@@ -123,7 +123,10 @@ Tree =
           }
           dat[nrow(dat)+1, ] = data[nrow(data), ]
           dat = dat[, 1:col_n]
-          potential_splits = dat
+          potential_splits = as.data.frame(dat)
+          if(ncol(potential_splits) == 1){
+            colnames(potential_splits)[[1]] = colnames(data)[[1]]
+          }
           return(potential_splits)
         },
       determine_best_split =
@@ -225,11 +228,23 @@ Tree =
 
 ##### Testing the OOP implementation #####
 
-dtree = Tree$new(min_samples = 10, max_depth = 10, mode = "entropy", df = salmon_fish)
+dtree = Tree$new(min_samples = 10, max_depth = 5, mode = "gini", df = salmon_fish)
 dtree_p = dtree$print_tree()
 dtree_b = dtree$build_tree()
 dtree$fit()
 dtree$make_prediction(y = c(4.5, 7.5))
+
+otree = Tree$new(min_samples = 10, max_depth = 5, mode = "entropy", df = iris[,c(4,5)])
+otree_p = otree$print_tree()
+otree_b = otree$build_tree()
+otree$fit()
+otree$make_prediction(y = c(4.5))
+
+dtree = Tree$new(min_samples = 10, max_depth = 5, mode = "entropy", df = salmon_fish)
+dtree_p = dtree$print_tree()
+dtree_b = dtree$build_tree()
+dtree$fit()
+dtree$make_prediction(y = c(4.5))
 
 salmon_fish_tt = train_test_split(data = salmon_fish, test = 200)
 salmon_fish_train = subset(salmon_fish_tt, salmon_fish_tt$my.folds == "train")[, -4]
@@ -285,6 +300,8 @@ ggplot(data = iris, aes(x = Petal.Width, y = Sepal.Length, color = Species)) +
   geom_hline(yintercept = 5.9) +
   geom_hline(yintercept = 5.05) +
   geom_hline(yintercept = 7.1)
+
+##### Troubleshooting the methods #####
   
   
   

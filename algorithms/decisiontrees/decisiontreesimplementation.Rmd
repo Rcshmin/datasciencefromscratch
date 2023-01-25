@@ -384,7 +384,10 @@ get_potential_splits <- function(data){
   }
   dat[nrow(dat)+1, ] = data[nrow(data), ]
   dat = dat[, 1:col_n]
-  potential_splits = dat
+  potential_splits = as.data.frame(dat)
+  if(ncol(potential_splits) == 1){
+    colnames(potential_splits)[[1]] = colnames(data)[[1]]
+  }
   return(potential_splits)
 }
 
@@ -456,6 +459,9 @@ determine_best_split <- function(data, potential_splits, mode = "gini"){
 }
 
 #might need to come back in future and add as.character() to gini as well
+
+get_potential_splits(data = iris[,c(4,5)])
+determine_best_split(data = iris[,c(4,5)], potential_splits = get_potential_splits(iris[,c(4,5)]), mode = "entropy")
 
 ```
 
