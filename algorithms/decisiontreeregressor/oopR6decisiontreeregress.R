@@ -239,7 +239,7 @@ Tree =
 
 ##### Testing the OOP Implementation #####
 
-dtree = Tree$new(min_samples = 5, max_depth = 3, df = iris[,c(1,2)])
+dtree = Tree$new(min_samples = 5, max_depth = 3, df = iris[,c(1,2,3)])
 dtree_store = dtree$build_tree()
 dtree_build = dtree$print_tree()
 
