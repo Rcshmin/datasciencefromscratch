@@ -252,9 +252,25 @@ sum(klist)
 The average accuracy of the model is 96%. 
 
 
-# Best choice of $k$?
+# Choice of $k$, repeated CV and LOOCV
 
+Users of k-fold cross validation typically default to using $k=5$ or $k=10$, but why? First of all it is important to note that the $k$ chosen should be dependent on the size of the data you are using. A smaller $k$ should be used if you have less samples, and a higher $k$ may be used if you have more. The logic behind this is simple. Recall that the more you increase $k$, the larger the training set gets, and the smaller the testing set gets. So a larger $k$ relative to a small data set would mean that there would not be many testing samples. This would not produce a robust estimate if run. When the size of the data set increases, we can afford a higher $k$ for the same reason as above. All in all, the choice of $k$ should "balance the trade off between having enough folds to get a good estimate, while not have so less folds that model training becomes too computationally expensive". So the answer to why values of 5 and 10 is not a straightforward one. These values have some empirical backing behind them, but I would say that they are just guides or a safe bet you can use if unsure.  
 
+```{r echo = F, out.extra='style="float:right; padding:10px"', out.width="50%"}
+knitr::include_graphics("images/bvterrormet.png")
+```
+
+Remember that the purpose of the k-fold CV is to produce an estimate of how well the model performs, and generalizes to unseen cases. So another option in addition to this would be to run repeated k-fold CV. What this means is you run the algorithm once, then shuffle the data again, and run the algorithm again. This should produce a completely new split of data among the folds. This process can be repeated to any amount of times. The idea behind repeated k-fold CV is that you iterate through as many feasible model/test sample combination from the test data as possible. One thing to note with this approach is that a large $k$ has a limited amount of possible iterations, so it does not make sense to use repeated k-fold CV. For example in "leave one out cross validation" (LOOCV), there are ${n \choose 1} = n= k$ different model/test sample splits, so it does not make sense to to try run repeated LOOCV, as the LOOCV by itself captures all the different iterations of the data set. By comparison if $n = 20$ and $k = 10$ there would be ${20 \choose 10} = 190 = 19k$ different iterations (possible splits). These iterations would not be captured in a single run of k-fold, so it may make sense to try go through all of them via repeated k-fold CV. All of this is of course under the assumption that computational complexity is irrelevant. 
+
+```{r echo = F, out.extra='style="float:right; padding:10px"', out.width="40%"}
+knitr::include_graphics("images/irr_error.jpg")
+```
+
+```{r echo = F, out.extra='style="float:center; padding:10px"', out.width="50%"}
+knitr::include_graphics("images/bvt.png")
+```
+
+There is one last thing to note here. Repeated k-fold CV is geared to when we are working with a data set with a small amount of samples; we are trying to average the model performance across as many random instances of our available data as computationally possible. When you have a large data set with many samples the difference between the "trained model" and the "globally best model" becomes negligible. This is where one lands upon a flatter part of the learning curve. Again, such only occurs when you have carefully chose your model; it does not overfit or underfit. 
 
 
 
