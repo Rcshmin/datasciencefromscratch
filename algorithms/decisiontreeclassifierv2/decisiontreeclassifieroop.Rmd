@@ -21,6 +21,8 @@ editor_options:
 knitr::opts_chunk$set(echo = TRUE)
 salmon_fish <- read.csv(url("https://raw.githubusercontent.com/ritvikmath/YouTubeVideoCode/main/fish.csv"))
 library(R6)
+library(devtools)
+source_url("https://raw.githubusercontent.com/Rcshmin/datasciencefromscratch/main/algorithms/kfoldcv/kfoldscript.R")
 ```
 
 # Preface
@@ -429,13 +431,25 @@ Tree =
 
 # Testing
 
+## Salmon-tuna dataset
+
+We begin by first creating a train test split
+
+```{r}
+set.seed(2310)
+salmon_fish_split = train_test_split(data = salmon_fish, test = 0.1)
+salmon_fish_train = subset(salmon_fish_split, salmon_fish_split$my.folds == "train")[, -4]
+salmon_fish_test = subset(salmon_fish_split, salmon_fish_split$my.folds == "test")[, -4]
+```
+
+
 We first specify the parameters for our new tree by creating an instance of the `Tree` class
 
 ```{r}
 dtree = Tree$new(min_samples = 10, 
                  max_depth = 5, 
                  mode = "entropy", 
-                 df = salmon_fish)
+                 df = salmon_fish_train)
 ```
 
 We then can build the tree according to these parameters. Lets run the fit method as well in anticipation for making a prediction after. We will also print three
@@ -455,8 +469,62 @@ We can make a prediction on a single value. If you remember the graph from my v1
 dtree$make_prediction(y = c(7.5, 2.5))
 ```
 
-We can then make a prediction on a different data set. 
+We can then also make a prediction on the training set as well and calculate the accuracy for this particular train test split
 
+```{r}
+predictions = salmon_fish_test$type == dtree$get_predictions(Y = salmon_fish_test)
+accuracy = length(which(predictions == TRUE))/nrow(salmon_fish_test)
+print(accuracy)
+```
+
+The accuracy for this particular split is 94%. 
+
+## Iris dataset
+
+Below is an example for the iris data set. I have changed the parameters of the tree as well this time. 
+
+```{r}
+
+#Train test split
+set.seed(2310)
+iris_split = train_test_split(data = iris, test = 0.1)
+iris_train = subset(iris_split, iris_split$my.folds == "train")[, -6]
+iris_test = subset(iris_split, iris_split$my.folds == "test")[, -6]
+
+#Create instance 
+itree = Tree$new(min_samples = 7, 
+                 max_depth = 7, 
+                 mode = "gini", 
+                 df = iris_train)
+
+#Build tree for viewing
+jtree = dtree$build_tree()
+#Store for predictions
+itree$fit()
+#Print the tree
+itree$print_tree()
+#Accuracy on testing data
+predictions = iris_test$Species == itree$get_predictions(Y = iris_test)
+accuracy = length(which(predictions == TRUE))/nrow(iris_test)
+print(accuracy)
+```
+
+The accuracy for this particular split is 100%.
+
+
+## Single variable example 
+
+Below, I would just like to highlight that this implementation works on data set with a single predictor only.
+
+```{r}
+ztree = Tree$new(min_samples = 7, 
+                 max_depth = 6, 
+                 mode = "entropy", 
+                 df = iris[, c(3,5)])
+ltree = ztree$build_tree()
+ztree$fit()
+ztree$print_tree()
+```
 
 
 
