@@ -4,18 +4,30 @@
 
 library(tidyverse)
 library(R6)
+library(devtools)
+
+#Import train-test split function from my github
+source_url("https://raw.githubusercontent.com/Rcshmin/datasciencefromscratch/main/algorithms/kfoldcv/kfoldscript.R")
 
 ##### Helper functions for random forest #####
 
 # Bootstrapping
 
 get_bootstrap = function(train_df, boot_samp){
-  #Sample indices with replacement
+  #If bootstrap samples is not provided, randomize
+  if(is.null(boot_samp)){
+    boot_samp = sample(x = 1:nrow(train_df), size = 1)
+  } else {
+    boot_samp = boot_samp
+  }
+  #Sample indices with replacement; replace = T, creates decimal indices as row names cannot be same
   indices = sample(x = 1:nrow(train_df), size = boot_samp, replace = TRUE)
   #Return bootstrapped data
   boot_df = train_df[indices, ]
   return(boot_df)
 }
+
+# Not an issue as duplicated rows are still coming through, fix later if the duplicated index becomes important
 
 # Altered potential splits for random subspace
 
@@ -77,24 +89,30 @@ RandomForest =
       subspace = "character",
       root = NULL,
       initialize = 
-        function(min_samples, max_depth, nboot, ntree, mode, df, root = NULL, subspace){
+        function(min_samples, max_depth = NULL, nboot = NULL, ntree, mode, df, root = NULL, subspace){
           self$min_samples = min_samples
           self$max_depth = max_depth
           self$mode = mode
           self$df = df
           self$root = root
-          self$nboot = nboot
           self$ntree = ntree
           self$subspace = subspace
+          self$nboot = nboot
+
         },
-      get_bootstrap = 
-        function(train_df, boot_samp){
-        #Sample indices with replacement
+      get_bootstrap = function(train_df, boot_samp){
+        #If bootstrap samples is not provided, randomize
+        if(is.null(boot_samp)){
+          boot_samp = sample(x = 1:nrow(train_df), size = 1)
+        } else {
+          boot_samp = boot_samp
+        }
+        #Sample indices with replacement; replace = T, creates decimal indices as row names cannot be same
         indices = sample(x = 1:nrow(train_df), size = boot_samp, replace = TRUE)
         #Return bootstrapped data
         boot_df = train_df[indices, ]
         return(boot_df)
-      },
+        },
       get_entropy =
         function(x){
           if(length(x) == 0) return(0)
@@ -275,6 +293,10 @@ RandomForest =
           r_tree = list()
           #Build trees according to params
           for(t in 1:self$ntree){
+            #If user does not define depth of forest random assign
+            if(is.null(self$max_depth)){
+              self$max_depth = sample(x = 1:15, size = 1, replace = F)
+            }
             r_tree[[t]] = self$build_tree(df = self$get_bootstrap(train_df = self$df, boot_samp = self$nboot))
           }
           return(r_tree)
@@ -329,18 +351,30 @@ RandomForest =
       
     ))
 
-##### Testing the random forest again a single tree #####
+##### Testing the random forest classifier against a single tree #####
 
 rttsplit = train_test_split(data = iris, test = 30)
 rtrain = subset(rttsplit, rttsplit$my.folds == "train")[, -6]
 rtest = subset(rttsplit, rttsplit$my.folds == "test")[, -6]
-rforest = RandomForest$new(min_samples = 5, max_depth = 5, nboot = 120, ntree = 100, mode = "entropy", df = rtrain, subspace = TRUE)
+
+#Different parameter forests
+rforest = RandomForest$new(min_samples = 5, max_depth = 5, nboot = 50 ,ntree = 100, mode = "entropy", df = rtrain, subspace = TRUE)
+rforest = RandomForest$new(min_samples = 5, ntree = 50, mode = "gini", df = rtrain, subspace = TRUE)
+rforest = RandomForest$new(min_samples = 5, ntree = 50, max_depth = 6, nboot = 40, mode = "entropy", df = rtrain, subspace = FALSE)
+rforest = RandomForest$new(min_samples = 5, ntree = 1000, max_depth = 2, mode = "entropy", df = rtrain, subspace = TRUE)
+rforest = RandomForest$new(min_samples = 5, ntree = 100, mode = "gini", df = rtrain, subspace = TRUE)
+
+#For a single tree, all relevant parameters should be defined (at least one of the stopping conditions)
+
 rforest$print_tree()
 rforest$fit()
 rforest$make_prediction(y = c(1,2,3,4))
 rpredictt = rforest$get_predictions(Y = rtest) == rtest$Species
 print((length(which(rpredictt == TRUE)))/(length(rpredictt)))
 rforest$get_predictions(Y = rtest) == rtest$Species
+
+#For a forest user does not need to define max_depth or nboot; they can be randomly assigned for each tree
+
 rforest$forest_fit()
 rforest$print_forest()
 rforest$forest_predict(y = c(1,2,3,4))
